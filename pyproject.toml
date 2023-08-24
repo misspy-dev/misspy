@@ -1,8 +1,8 @@
 [tool.poetry]
 name = "misspy"
-version = "0.1.0"
+version = "2023.08.24.pre1"
 description = ""
-authors = ["Your Name <you@example.com>"]
+authors = ["sonyakun <contact@sonyakun.xyz>"]
 packages = [{include = "misspy"}]
 readme = "README.md"
 
