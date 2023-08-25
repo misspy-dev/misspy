@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "misspy"
-version = "2023.08.24.pre1"
+version = "2023.08.25.pre1"
 description = ""
 authors = ["sonyakun <contact@sonyakun.xyz>"]
 packages = [{include = "misspy"}]

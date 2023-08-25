@@ -1,7 +1,7 @@
 site_name: misspy
-copyright: "&copy; 2023 sonyakunYT"
-repo_url: https://github.com/sonyakunYT/misspy
-repo_name: sonyakunYT/misspy
+copyright: "&copy; 2023 sonyakun"
+repo_url: https://github.com/sonyakun/misspy
+repo_name: sonyakun/misspy
 
 theme:
   name: material
@@ -30,10 +30,13 @@ extra:
       link: /
       lang: ja
 
-  markdown_extensions:
-    - pymdownx.highlight:
-        use_pygments: true
-        noclasses: true
-        pygments_style: monokai
-        linenums: true
-    - pymdownx.keys
+markdown_extensions:
+  - pymdownx.highlight:
+      use_pygments: true
+      noclasses: true
+      pygments_style: monokai
+      linenums: true
+  - pymdownx.keys
+  - admonition
+  - pymdownx.superfences
+  - pymdownx.details

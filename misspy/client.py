@@ -5,15 +5,16 @@ import httpx
 import websockets
 from attrdictionary import AttrDict
 
+from .http import request
+from .http import request_sync
 from . import notes
-
 
 class Bot:
     """
     Class used to connect and interact with the Misskey Streaming API.
     """
 
-    def __init__(self, address, i) -> None:
+    def __init__(self, address, i=None) -> None:
         self.__address = address
         if not address.startswith("http://") and not address.startswith("https://"):
             self.address = "https://" + address
@@ -24,6 +25,9 @@ class Bot:
     def user(self):
         res = httpx.post(f"{self.address}/api/i")
         return AttrDict(res.json())
+
+    def meta(self, detail: bool=True):
+        return AttrDict(request_sync(self.address, self.__i, "meta", {"detail": detail}))
 
     def run(self):
         asyncio.run(self.recv())
