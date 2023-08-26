@@ -9,6 +9,7 @@ from .http import request
 from .http import request_sync
 from . import notes
 
+
 class Bot:
     """
     Class used to connect and interact with the Misskey Streaming API.
@@ -26,8 +27,10 @@ class Bot:
         res = httpx.post(f"{self.address}/api/i")
         return AttrDict(res.json())
 
-    def meta(self, detail: bool=True):
-        return AttrDict(request_sync(self.address, self.__i, "meta", {"detail": detail}))
+    def meta(self, detail: bool = True):
+        return AttrDict(
+            request_sync(self.address, self.__i, "meta", {"detail": detail})
+        )
 
     def run(self):
         asyncio.run(self.recv())
@@ -150,42 +153,46 @@ class Bot:
     async def notes_children(
         self,
         noteId: str,
-        sinceId: str=None,
-        untilId: str=None,
-        limit: int=10,
+        sinceId: str = None,
+        untilId: str = None,
+        limit: int = 10,
     ):
-        return AttrDict(await notes.children(
-            self.address,
-            self.__i,
-            noteId,
-            limit,
-            sinceId,
-            untilId,
-        ))
+        return AttrDict(
+            await notes.children(
+                self.address,
+                self.__i,
+                noteId,
+                limit,
+                sinceId,
+                untilId,
+            )
+        )
 
     async def notes(
         self,
-        local: bool=False,
-        reply: bool=None,
-        renote: bool=None,
-        withFiles: bool=None,
-        poll: bool=None,
-        limit: int=10,
-        sinceId: str=None,
-        untilId: str=None
+        local: bool = False,
+        reply: bool = None,
+        renote: bool = None,
+        withFiles: bool = None,
+        poll: bool = None,
+        limit: int = 10,
+        sinceId: str = None,
+        untilId: str = None,
     ):
-        return AttrDict(await notes.note(
-            self.address,
-            self.__i,
-            local,
-            reply,
-            renote,
-            withFiles,
-            poll,
-            limit,
-            sinceId,
-            untilId,
-        ))
+        return AttrDict(
+            await notes.note(
+                self.address,
+                self.__i,
+                local,
+                reply,
+                renote,
+                withFiles,
+                poll,
+                limit,
+                sinceId,
+                untilId,
+            )
+        )
 
     async def notes_create(
         self,
@@ -198,7 +205,7 @@ class Bot:
         localOnly=False,
         renoteId=None,
     ):
-        """Create notes. Reply and Renote are also done with this function. However, the actual processing is done in another function. 
+        """Create notes. Reply and Renote are also done with this function. However, the actual processing is done in another function.
 
         Args:
             text (str): note content
@@ -214,68 +221,43 @@ class Bot:
             AttrDict: You can get the contents in a format like a.b.
         """
 
-        return AttrDict(await notes.create(
-            self.address,
-            self.__i,
-            text,
-            visibility,
-            visibleUserIds,
-            replyid,
-            fileid,
-            channelId,
-            localOnly,
-            renoteId,
-        ))
+        return AttrDict(
+            await notes.create(
+                self.address,
+                self.__i,
+                text,
+                visibility,
+                visibleUserIds,
+                replyid,
+                fileid,
+                channelId,
+                localOnly,
+                renoteId,
+            )
+        )
 
-    async def renote(
+    async def drive_files_create(
         self,
-        rid: str,
-        quote: str = None,
-        visibility="public",
-        visibleUserIds: list = None,
-        channelId=None,
-        localOnly=False,
+        file,
+        folderId: str = None,
+        name: str = None,
+        is_sensitive: bool = False,
+        force: bool = False,
     ):
-        url = f"{self.address}/api/notes/create"
-        if quote is None:
-            params = {
-                "i": self.__i,
-                "renoteId": rid,
-                "localOnly": localOnly,
-                "channelId": channelId,
-            }
-            head = {"Content-Type": "application/json"}
-            async with httpx.AsyncClient() as client:
-                r = await client.post(url=url, json=params, headers=head)
-                return r.json()
-        else:
-            if visibleUserIds is None:
-                params = {
-                    "i": self.__i,
-                    "renoteId": rid,
-                    "visibility": visibility,
-                    "localOnly": localOnly,
-                    "channelId": channelId,
-                    "text": quote,
-                }
-                head = {"Content-Type": "application/json"}
-                async with httpx.AsyncClient() as client:
-                    r = await client.post(url=url, json=params, headers=head)
-                    return r.json()
-            else:
-                params = {
-                    "i": self.__i,
-                    "renoteId": rid,
-                    "visibility": visibility,
-                    "visibleUserIds": visibleUserIds,
-                    "localOnly": localOnly,
-                    "channelId": channelId,
-                    "text": quote,
-                }
-                head = {"Content-Type": "application/json"}
-                async with httpx.AsyncClient() as client:
-                    r = await client.post(url=url, json=params, headers=head)
-                    return r.json()
+        base = {}
+        if not is_sensitive == False:
+            base["is_sensitive"] = is_sensitive
+        if not is_sensitive == False:
+            base["force"] = force
+        if folderId is not None:
+            base["folderId"] = folderId
+        if name is not None:
+            base["name"] = name
+        return AttrDict(
+            await request(
+                self.address, self.__i, "drive/files/create", base, files={"file": file}
+            )
+        )
 
     async def inf(self):
         url = f"{self.address}/api/i"
