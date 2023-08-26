@@ -150,6 +150,39 @@ class Bot:
                         except AttributeError:
                             pass
 
+    async def connect(self, channel):
+        await self.ws.send(
+            json.dumps(
+                {
+                    "type": 'connect',
+                    "body": {
+                        "channel": channel,
+                        "id": channel,
+                    }
+                }
+            )
+        )
+
+    async def unsubNote(self, noteId):
+        await self.ws.send(
+            json.dumps(
+                {
+                    "type": "unsubNote",
+                    "body": {"id": noteId},
+                }
+            )
+        )
+
+    async def subNote(self, noteId):
+        await self.ws.send(
+            json.dumps(
+                {
+                    "type": "subNote",
+                    "body": {"id": noteId},
+                }
+            )
+        )
+
     async def notes_children(
         self,
         noteId: str,
@@ -233,6 +266,83 @@ class Bot:
                 channelId,
                 localOnly,
                 renoteId,
+            )
+        )
+
+    async def pages_create(
+        self,
+        title,
+        name,
+        content,
+        variables,
+        script,
+        summary=None,
+        eyeCatchingImageId=None,
+        font=None,
+        alignCenter=None,
+        hideTitleWhenPinned=None
+    ):
+        base = {
+            "title": title,
+            "name": name,
+            "content": content,
+            "variables": variables,
+            "script": script
+        }
+        if summary is not None:
+            base["summary"] = summary
+        if eyeCatchingImageId is not None:
+            base["eyeCatchingImageId"] = eyeCatchingImageId
+        if font is not None:
+            base["font"] = font
+        if alignCenter is not None:
+            base["alignCenter"] = alignCenter
+        if hideTitleWhenPinned is not None:
+            base["hideTitleWhenPinned"] = hideTitleWhenPinned
+        return AttrDict(
+            await request(
+                self.address, self.__i, "pages/create", base
+            )
+        )
+
+    async def pages_delete(
+        self,
+        pageId
+    ):
+        base = {
+            "pageId": pageId
+        }
+        return AttrDict(
+            await request(
+                self.address, self.__i, "pages/delete", base
+            )
+        )     
+    
+    async def pages_show(
+        self,
+        pageId,
+        name,
+        username
+    ):
+        base = {
+            "pageId": pageId,
+            "name": name,
+            "username": username
+        }
+        return AttrDict(
+            await request(
+                self.address, self.__i, "pages/show", base
+            )
+        )      
+
+    async def drive_files_delete(
+        self,
+        fileId: str
+    ):
+        base = {"fileId": fileId}
+        return AttrDict(
+            await request(
+                self.address, self.__i, "drive/files/delete", base
             )
         )
 
