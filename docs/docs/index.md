@@ -6,5 +6,3 @@ misspyは、StreamingAPIをサポートしたPython用のMisskey APIライブラ
 
 - `async`/`await`構文のサポート
 - [StreamingAPI](https://misskey-hub.net/docs/api/streaming)のサポート
-
-# はじめに

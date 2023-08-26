@@ -27,7 +27,14 @@ py -3 -m pip install -U misspy
 misspyはAPIリクエストをメソッドで送信する仕組みです。
 
 少なくともインスタンスアドレスを指定するだけでmisspyの利用を開始することができます。
-```python
+
+misspyで返されるものは基本的に辞書型ではなく、javascriptのドット記法のような方法で値を取得することができます。
+```
 import misspy
 
+bot = misspy.Bot("mi.example.com")
+
+meta = bot.meta()
+
+print(meta.name)
 ```
