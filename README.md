@@ -13,7 +13,7 @@ Misskey forks other than [misskey-dev/misskey](https://github.com/misskey-dev/mi
 
 | version               | support | MiAuth | 
 | :-------------------: | ------- | -----: | 
-| v11 before (and fork) | ❌ (Under development)     | ❌     | 
+| v11 before (and fork) | ❌  | ❌     | 
 | v12.27.0 before       | ⭕️    | ❌     | 
 | v12.27.0 later       | ⭕️    | ⭕️   | 
 | v13 later             | ⭕️    | ⭕️   | 
