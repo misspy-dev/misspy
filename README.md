@@ -1,6 +1,24 @@
 # misspy
 Misskey API library for Python with StreamingAPI support.
 
+# supported software
+Misskey forks other than [misskey-dev/misskey](https://github.com/misskey-dev/misskey) are __***basically***__ only the latest versions are supported.
+* [misskey](https://github.com/misskey-dev/misskey)
+* [misskey (misskey.io)](https://github.com/misskeyIO/misskey)
+<!-- * [firefish (calckey)](https://codeberg.org/firefish/firefish) (under development) -->
+
+
+## supported misskey versions
+> MiAuth is not supported before 12.27.0.
+
+| version               | support | MiAuth | 
+| :-------------------: | ------- | -----: | 
+| v11 before (and fork) | ❌ (Under development)     | ❌     | 
+| v12.27.0 before       | ⭕️    | ❌     | 
+| v12.27.0 later       | ⭕️    | ⭕️   | 
+| v13 later             | ⭕️    | ⭕️   | 
+
+
 # example
 **Other examples can be found in the examples directory.**
 
