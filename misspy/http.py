@@ -40,6 +40,7 @@ async def request(
     endpoint="test",
     jobj: dict = {"required": True},
     files=None,
+    header=None,
 ):
     """request (internal function)
 
@@ -57,11 +58,19 @@ async def request(
         if i is not None:
             jobj["i"] = i
         if files is not None:
-            res = await client.post(
-                url,
-                data=jobj,
-                files=files,
-            )
+            if header is not None:
+                res = await client.post(
+                    url,
+                    data=json.dumps(jobj, ensure_ascii=False),
+                    files=files,
+                    headers=header,
+                )
+            else:
+                res = await client.post(
+                    url,
+                    data=json.dumps(jobj, ensure_ascii=False),
+                    files=files,
+                )
             try:
                 try:
                     if json.loads(res.text).get("error").get("kind") is not None:
@@ -77,8 +86,20 @@ async def request(
             except json.decoder.JSONDecodeError:
                 raise HTTPException(res.status_code)
         else:
-            res = await client.post(url, data=json.dumps(jobj, ensure_ascii=False))
-            return res.json()
+            if header is not None:
+                res = await client.post(
+                    url, data=json.dumps(jobj, ensure_ascii=False), headers=header
+                )
+                try:
+                    return res.json()
+                except json.JSONDecodeError:
+                    return True
+            else:
+                res = await client.post(url, data=json.dumps(jobj, ensure_ascii=False))
+                try:
+                    return res.json()
+                except json.JSONDecodeError:
+                    return True
 
 
 async def request_guest(

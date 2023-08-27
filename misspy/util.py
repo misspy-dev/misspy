@@ -12,4 +12,3 @@ def nonecheck(arg):
         return False
     else:
         return True
-    
