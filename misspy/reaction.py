@@ -13,10 +13,9 @@ async def create(address, i, noteId, reaction):
     Returns:
         dict: Misskey API response
     """
-    return request(
+    return await request(
         address, i, "notes/reactions/create", {"noteId": noteId, "reaction": reaction}
     )
-
 
 async def delete(address, i, noteId):
     """delete reaction.
@@ -29,4 +28,4 @@ async def delete(address, i, noteId):
     Returns:
         dict: Misskey API response
     """
-    return request(address, i, "notes/reactions/delete", {"noteId": noteId})
+    return await request(address, i, "notes/reactions/delete", {"noteId": noteId})
