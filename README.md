@@ -1,4 +1,6 @@
 # misspy
+[![PyPI version](https://badge.fury.io/py/misspy.svg)](https://badge.fury.io/py/misspy)
+
 Misskey API library for Python with StreamingAPI support.
 
 # supported software
