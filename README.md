@@ -1,5 +1,5 @@
 # misspy
-[![PyPI version](https://badge.fury.io/py/misspy.svg)](https://badge.fury.io/py/misspy) [![PyPI Downloads](https://img.shields.io/pypi/dm/misspy.svg)](https://badge.fury.io/py/misspy)
+![Supported Python Version](https://img.shields.io/pypi/pyversions/misspy) [![PyPI version](https://badge.fury.io/py/misspy.svg)](https://badge.fury.io/py/misspy) [![PyPI Downloads](https://img.shields.io/pypi/dm/misspy.svg)](https://badge.fury.io/py/misspy) [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
 Misskey API library for Python with StreamingAPI support.
 
@@ -15,10 +15,10 @@ Misskey forks other than [misskey-dev/misskey](https://github.com/misskey-dev/mi
 
 | version               | support | MiAuth | 
 | :-------------------: | ------- | -----: | 
-| v11 before (and fork) | ❌  | ❌     | 
-| v12.27.0 before       | ⭕️    | ❌     | 
-| v12.27.0 later       | ⭕️    | ⭕️   | 
-| v13 later             | ⭕️    | ⭕️   | 
+| v11 before (and fork) |   |      | 
+| v12.27.0 before       |     |      | 
+| v12.27.0 later       |     |    | 
+| v13 later             |     |    | 
 
 
 # example
