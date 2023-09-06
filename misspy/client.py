@@ -89,11 +89,6 @@ class Bot:
                                 await self.on_reacted(AttrDict(recv["body"]["body"]))
                             except AttributeError:
                                 pass
-                        elif recv["body"]["body"]["type"] == "reaction":
-                            try:
-                                await self.on_reacted(AttrDict(recv["body"]["body"]))
-                            except AttributeError:
-                                pass
                     elif recv["body"]["type"] == "follow":
                         try:
                             await self.on_following(AttrDict(recv["body"]["body"]))
