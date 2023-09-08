@@ -15,10 +15,9 @@ Misskey forks not listed below are supported only in the latest version **__prov
 
 | version               | support | MiAuth | 
 | :-------------------: | ------- | -----: | 
-| v11 before (and fork) |   |      | 
-| v12.27.0 before       |     |      | 
-| v12.27.0 later       |     |    | 
-| v13 later             |     |    | 
+| v12.27.0 before       |  ⭕   |   ❌   | 
+| v12.27.0 later       |  ⭕   |  ⭕  | 
+| v13 later             |  ⭕   |  ⭕  | 
 
 
 # example
