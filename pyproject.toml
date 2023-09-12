@@ -10,7 +10,7 @@ repository = "https://github.com/sonyakun/misspy"
 
 [tool.poetry.dependencies]
 python = "^3.8"
-httpx = "^0.24.1"
+httpx = ">=0.24.1,<0.26.0"
 websockets = "^11.0.3"
 attrdictionary = "^1.0.0"
 
