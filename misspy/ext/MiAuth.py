@@ -3,7 +3,7 @@ from attrdictionary import AttrDict
 
 import uuid
 
-from .. import exception
+from ..core import exception
 
 
 class MiAuth:
@@ -60,9 +60,7 @@ class MiAuth:
         return url
 
     def check(self):
-        res = httpx.post(
-            f"{self._address}/api/miauth/{self.session_id}/check"
-        ).json()
+        res = httpx.post(f"{self._address}/api/miauth/{self.session_id}/check").json()
         if res.get("token") is not None:
             return AttrDict(res)
         else:

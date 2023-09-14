@@ -50,4 +50,4 @@ print(token)
 
 # docs
 Documentation can be found at:
-https://misspy.sonyakun.xyz/docs
+https://misspy.sonyakun.com/docs

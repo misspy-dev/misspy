@@ -1,5 +1,3 @@
-import httpx
-
 from .util import nonecheck
 from .http import request
 
@@ -150,118 +148,61 @@ async def local_timeline(
         base["untilDate"] = untilDate
     return await request(address, i, "notes/local-timeline", base)
 
-async def featured(
-    address,
-    i,
-    limit=10,
-    offset=0
-):
+
+async def featured(address, i, limit=10, offset=0):
     return await request(
-        address, 
-        i, 
-        "notes/featured", 
-        {"limit": limit, "offset": offset}
+        address, i, "notes/featured", {"limit": limit, "offset": offset}
     )
 
-async def favorites_create(
-    address,
-    i,
-    noteId
-):
+
+async def favorites_create(address, i, noteId):
+    return await request(address, i, "notes/favorites/create", {"noteId": noteId})
+
+
+async def favorites_delete(address, i, noteId):
+    return await request(address, i, "notes/favorites/delete", {"noteId": noteId})
+
+
+async def polls_recommendation(address, i, limit=10, offset=0):
     return await request(
-        address,
-        i,
-        "notes/favorites/create",
-        {"noteId": noteId}
+        address, i, "notes/polls/recommendation", {"limit": limit, "offset": offset}
     )
 
-async def favorites_delete(
-    address,
-    i,
-    noteId
-):
+
+async def polls_vote(address, i, noteId, choice):
     return await request(
-        address,
-        i,
-        "notes/favorites/delete",
-        {"noteId": noteId}
+        address, i, "notes/polls/vote", {"noteId": noteId, "choice": choice}
     )
 
-async def polls_recommendation(
-    address,
-    i,
-    limit=10,
-    offset=0
-):
-    return await request(
-        address,
-        i,
-        "notes/polls/recommendation",
-        {"limit": limit, "offset": offset}
-    )
-
-async def polls_vote(
-    address,
-    i,
-    noteId,
-    choice
-):
-    return await request(
-        address,
-        i,
-        "notes/polls/vote",
-        {"noteId": noteId, "choice": choice}
-    )
 
 async def reactions(
     address,
     i,
     noteId: str,
-    type: str=None,
-    limit: int=10,
-    offset: int=0,
-    sinceId: str=None,
-    untilId: str=None
+    type: str = None,
+    limit: int = 10,
+    offset: int = 0,
+    sinceId: str = None,
+    untilId: str = None,
 ):
-    base={
-        "noteId": noteId,
-        "type": type,
-        "limit": limit,
-        "offset": offset
-    }
+    base = {"noteId": noteId, "type": type, "limit": limit, "offset": offset}
     if nonecheck(sinceId):
         base["sinceId"] = sinceId
     if nonecheck(untilId):
         base["untilId"] = untilId
-    return await request(
-        address,
-        i,
-        "notes/reactions",
-        base
-    )
+    return await request(address, i, "notes/reactions", base)
+
 
 async def replies(
-    address,
-    i,
-    noteId: str,
-    sinceId: str=None,
-    untilId: str=None,
-    limit: int=10
+    address, i, noteId: str, sinceId: str = None, untilId: str = None, limit: int = 10
 ):
-    base={
-        "noteId": noteId,
-        "limit": limit
-    }
+    base = {"noteId": noteId, "limit": limit}
     if nonecheck(sinceId):
         base["sinceId"] = sinceId
     if nonecheck(untilId):
         base["untilId"] = untilId
-    return await request(
-        address,
-        i,
-        "notes/replies",
-        base
-    )
+    return await request(address, i, "notes/replies", base)
+
 
 async def search(
     address,
@@ -272,25 +213,21 @@ async def search(
     poll=False,
     sinceId=None,
     untilId=None,
-    limit=10
+    limit=10,
 ):
-    base={
+    base = {
         "reply": reply,
         "renote": renote,
         "withFiles": withFiles,
         "poll": poll,
-        "limit": limit
+        "limit": limit,
     }
     if nonecheck(sinceId):
         base["sinceId"] = sinceId
     if nonecheck(untilId):
         base["untilId"] = untilId
-    return await request(
-        address,
-        i,
-        "notes/search-by-tag",
-        base
-    )
+    return await request(address, i, "notes/search-by-tag", base)
+
 
 async def search_by_tag(
     address,
@@ -302,69 +239,48 @@ async def search_by_tag(
     offset=0,
     host=None,
     userId=None,
-    channelId=None
+    channelId=None,
 ):
-    base={
+    base = {
         "query": query,
         "offset": offset,
         "limit": limit,
         "host": host,
         "userId": userId,
-        "channelId": channelId
+        "channelId": channelId,
     }
     if nonecheck(sinceId):
         base["sinceId"] = sinceId
     if nonecheck(untilId):
         base["untilId"] = untilId
-    return await request(
-        address,
-        i,
-        "notes/search",
-        base
-    )
+    return await request(address, i, "notes/search", base)
 
-async def state(
-    address,
-    i,
-    noteId
-):
+
+async def state(address, i, noteId):
     return await request(address, i, "notes/state", {"noteId": noteId})
 
-async def show(
-    address,
-    i,
-    noteId
-):
+
+async def show(address, i, noteId):
     return await request(address, i, "notes/show", {"noteId": noteId})
 
-async def thread_muting_create(
-    address,
-    i,
-    noteId
-):
+
+async def thread_muting_create(address, i, noteId):
     return await request(address, i, "notes/thread-muting/create", {"noteId": noteId})
 
-async def thread_muting_delete(
-    address,
-    i,
-    noteId
-):
+
+async def thread_muting_delete(address, i, noteId):
     return await request(address, i, "notes/thread-muting/delete", {"noteId": noteId})
 
-async def translate(
-    address,
-    i,
-    noteId,
-    targetLang
-):
-    return await request(address, i, "notes/translate", {"noteId": noteId, "targetLang": targetLang})
 
-async def unrenote(
-    address,
-    i,
-    noteId
-):
+async def translate(address, i, noteId, targetLang):
+    return await request(
+        address, i, "notes/translate", {"noteId": noteId, "targetLang": targetLang}
+    )
+
+
+async def unrenote(address, i, noteId):
     return await request(address, i, "notes/unrenote", {"noteId": noteId})
+
 
 async def user_list_timeline(
     address,
@@ -378,17 +294,17 @@ async def user_list_timeline(
     includeMyRenotes=True,
     includeRenotedMyNotes=True,
     includeLocalRenotes=True,
-    withFiles=False
+    withFiles=False,
 ):
     base = {
-       "listId": listId,
-       "limit": limit,
-       "sinceDate": sinceDate,
-       "untilDate": untilDate,
-       "includeMyRenotes": includeMyRenotes,
-       "includeRenotedMyNotes": includeRenotedMyNotes,
-       "includeLocalRenotes": includeLocalRenotes,
-       "withFiles": withFiles
+        "listId": listId,
+        "limit": limit,
+        "sinceDate": sinceDate,
+        "untilDate": untilDate,
+        "includeMyRenotes": includeMyRenotes,
+        "includeRenotedMyNotes": includeRenotedMyNotes,
+        "includeLocalRenotes": includeLocalRenotes,
+        "withFiles": withFiles,
     }
     if nonecheck(sinceId):
         base["sinceId"] = sinceId
@@ -396,41 +312,27 @@ async def user_list_timeline(
         base["untilId"] = untilId
     return await request(address, i, "notes/user-list-timeline", base)
 
-async def watching_create(
-    address,
-    i,
-    noteId
-):
+
+async def watching_create(address, i, noteId):
     return await request(address, i, "notes/watching/create", {"noteId": noteId})
 
-async def watching_delete(
-    address,
-    i,
-    noteId
-):
+
+async def watching_delete(address, i, noteId):
     return await request(address, i, "notes/watching/delete", {"noteId": noteId})
 
 
 async def mentions(
-    address, 
-    i, 
-    following=False, 
-    limit=10, 
-    sinceId=None, 
-    untilId=None, 
-    visibility=None
+    address, i, following=False, limit=10, sinceId=None, untilId=None, visibility=None
 ):
-    base = {
-        "following": following,
-        "limit": limit
-    }
+    base = {"following": following, "limit": limit}
     if nonecheck(sinceId):
         base["sinceId"] = sinceId
     if nonecheck(untilId):
-        base["untilId"] = untilId    
+        base["untilId"] = untilId
     if nonecheck(visibility):
         base["visibility"] = visibility
     return await request(address, i, "notes/mentions", base)
+
 
 async def create(
     address,
@@ -488,7 +390,10 @@ async def create(
         base["channelId"] = channelId
     if renoteId is not None:
         base["renoteId"] = renoteId
-    return await request(address, i, "notes/create", base)
+    req = await request(
+        address, i, "notes/create", base, header={"Content-Type": "application/json"}
+    )
+    return req
 
 
 async def delete(address, i, noteId):

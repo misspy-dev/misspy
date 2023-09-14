@@ -1,3 +1,9 @@
+# Documents
+docs/*
+
+# example
+example/*
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -163,4 +169,6 @@ venv.txt
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 #.idea/
 example/test.png
+example/box.py
+poetry.lock
 example/box.py

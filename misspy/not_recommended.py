@@ -1,7 +1,13 @@
-from .http import request_guest, request
+from .http import request_sync
 
-async def request_reset_password(instance, username, email):
-    return await request_guest(instance, "request-reset-password", {"username": username, "email": email})
 
-async def reset_password(instance, i, password):
-    return await request_guest(instance, "request-reset-password", {"token": i, "password": password})
+def request_reset_password(instance, username, email):
+    return request_sync(
+        instance, None, "request-reset-password", {"username": username, "email": email}
+    )
+
+
+def reset_password(instance, i, password):
+    return request_sync(
+        instance, None, "request-reset-password", {"token": i, "password": password}
+    )

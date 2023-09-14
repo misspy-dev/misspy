@@ -1,14 +1,15 @@
 import asyncio
 import json
 
-import httpx
 import websockets
 from attrdictionary import AttrDict
 
+from . import notes
+from . import log
+from . import hook
 from .http import request
 from .http import request_sync
 from .util import nonecheck
-from . import notes
 
 
 class Bot:
@@ -16,17 +17,17 @@ class Bot:
     Class used to connect and interact with the Misskey Streaming API.
     """
 
-    def __init__(self, address, i=None) -> None:
+    def __init__(self, address, i=None, enable_logging=True) -> None:
         self.__address = address
         if not address.startswith("http://") and not address.startswith("https://"):
             self.address = "https://" + address
-        self.ws = None
         self.__i = i
         self.bot = self.user()
+        if enable_logging == False:
+            log.enablelog = False
 
     def user(self):
-        res = httpx.post(f"{self.address}/api/i")
-        return AttrDict(res.json())
+        return AttrDict(request_sync(self.address, self.__i, "i", {}))
 
     def meta(self, detail: bool = True):
         return AttrDict(
@@ -34,7 +35,7 @@ class Bot:
         )
 
     def run(self):
-        asyncio.run(self.recv())
+        asyncio.run(self.ws_handler())
 
     async def announcements(
         self,
@@ -43,17 +44,14 @@ class Bot:
         sinceId: str = None,
         untilId: str = None,
     ):
-        async with httpx.AsyncClient() as client:
-            data = {"i": self.__i, "limit": limit, "withUnreads": withUnreads}
-            if sinceId is not None:
-                data["sinceId"] = sinceId
-            if untilId is not None:
-                data["untilId"] = untilId
+        data = {"limit": limit, "withUnreads": withUnreads}
+        if sinceId is not None:
+            data["sinceId"] = sinceId
+        if untilId is not None:
+            data["untilId"] = untilId
+        return AttrDict(await request(self.address, self.__i, "announcements", data))
 
-            res = await client.post(f"{self.address}/api/announcements", json=data)
-            res = await res.json()
-
-    async def recv(self):
+    async def ws_handler(self):
         async with websockets.connect(
             f"wss://{self.__address}/streaming?i={self.__i}"
         ) as self.ws:
@@ -61,91 +59,37 @@ class Bot:
                 await self.on_ready()
             except AttributeError:
                 pass
-            await self.ws.send(
-                json.dumps(
-                    {
-                        "type": "connect",
-                        "body": {"channel": "localTimeline", "id": "test"},
-                    }
-                )
-            )
             while True:
                 recv = json.loads(await self.ws.recv())
                 if recv["type"] == "channel":
                     if recv["body"]["type"] == "note":
-                        try:
-                            try:
-                                if recv["body"]["body"]["renote"] is None:
-                                    await self.on_note(AttrDict(recv["body"]["body"]))
-                                else:
-                                    await self.on_renote(AttrDict(recv["body"]["body"]))
-                            except KeyError:
-                                await self.on_note(AttrDict(recv["body"]["body"]))
-                        except AttributeError:
-                            pass
+                        hook.functions[recv["body"]["type"]](
+                            AttrDict(recv["body"]["body"])
+                        )
                     elif recv["body"]["type"] == "notification":
-                        if recv["body"]["body"]["type"] == "reaction":
-                            try:
-                                await self.on_reacted(AttrDict(recv["body"]["body"]))
-                            except AttributeError:
-                                pass
-                        elif recv["body"]["body"]["type"] == "reaction":
-                            try:
-                                await self.on_reacted(AttrDict(recv["body"]["body"]))
-                            except AttributeError:
-                                pass
-                    elif recv["body"]["type"] == "follow":
-                        try:
-                            await self.on_following(AttrDict(recv["body"]["body"]))
-                        except AttributeError:
-                            pass
+                        if recv["body"]["type"] == "follow":
+                            hook.functions[recv["body"]["type"]](
+                                AttrDict(recv["body"]["body"])
+                            )
+                        else:
+                            hook.functions[recv["body"]["body"]["type"]](
+                                AttrDict(recv["body"]["body"])
+                            )
                     elif recv["body"]["type"] == "followed":
-                        try:
-                            await self.on_followed(AttrDict(recv["body"]["body"]))
-                        except AttributeError:
-                            pass
-                    elif recv["body"]["type"] == "unfollow":
-                        try:
-                            await self.on_unfollowing(AttrDict(recv["body"]))
-                        except AttributeError:
-                            pass
-                    elif recv["body"]["type"] == "mention":
-                        try:
-                            await self.on_mention(AttrDict(recv["body"]))
-                        except AttributeError:
-                            pass
-                    elif recv["body"]["type"] == "reply":
-                        try:
-                            await self.on_reply(AttrDict())
-                        except AttributeError:
-                            pass
-                    elif recv["body"]["type"] == "renote":
-                        try:
-                            await self.on_renote(AttrDict(recv["body"]))
-                        except AttributeError:
-                            pass
+                        hook.functions[recv["body"]["type"]](
+                            AttrDict(recv["body"]["body"])
+                        )
+                    elif recv["type"] == "noteUpdated":
+                        hook.functions[recv["body"]["type"]](AttrDict(recv["body"]))
+                    else:
+                        hook.functions[recv["body"]["type"]](AttrDict(recv["body"]))
 
-                if recv["type"] == "noteUpdated":
-                    if recv["body"]["type"] == "reacted":
-                        try:
-                            await self.on_reacted(AttrDict(recv["body"]))
-                        except AttributeError:
-                            pass
-                    elif recv["body"]["type"] == "unreacted":
-                        try:
-                            await self.on_unreacted(AttrDict(recv["body"]))
-                        except AttributeError:
-                            pass
-                    elif recv["body"]["type"] == "pollVoted":
-                        try:
-                            await self.on_voted(AttrDict(recv["body"]))
-                        except AttributeError:
-                            pass
-                    elif recv["body"]["type"] == "deleted":
-                        try:
-                            await self.on_note_delete(AttrDict(recv["body"]))
-                        except AttributeError:
-                            pass
+    async def recv(self):
+        await self.ws.start(handler=self.ws_handler)
+        try:
+            await self.on_ready()
+        except AttributeError:
+            pass
 
     async def connect(self, channel):
         await self.ws.send(
@@ -673,7 +617,7 @@ class Bot:
 
     async def notes_create(
         self,
-        text,
+        text=None,
         visibility="public",
         visibleUserIds: list = None,
         replyid=None,
@@ -753,8 +697,8 @@ class Bot:
         base = {"pageId": pageId, "name": name, "username": username}
         return AttrDict(await request(self.address, self.__i, "pages/show", base))
 
-    async def drive(self):
-        return AttrDict(await request(self.address, self.__i, "drive", {}))
+    def drive(self):
+        return AttrDict(request_sync(self.address, self.__i, "drive", {}))
 
     async def drive_stream(
         self, limit=10, sinceId=None, untilId=None, folderId=None, type=None
@@ -1123,8 +1067,11 @@ class Bot:
             )
         )
 
-    async def users_show(self):
-        return AttrDict(await request(self.address, self.__i, "users/show", {}))
+    def users_show(self, username, host=None):
+        d = request_sync(
+            self.address, self.__i, "users/show", {"username": username, "host": None}
+        )
+        return AttrDict(d)
 
     async def users_stats(self, userId):
         return AttrDict(
@@ -1249,59 +1196,36 @@ class Bot:
             )
         )
 
-    async def hashtags_search(
-        self,
-        query,
-        limit=10,
-        offset=0
-    ):
+    async def hashtags_search(self, query, limit=10, offset=0):
         return AttrDict(
             await request(
                 self.address,
                 self.__i,
                 "hashtags/search",
-                {"query": query, "limit": limit, "offset": offset}
-            )
-        )
-        
-    async def hashtags_search(
-        self,
-        tag
-    ):
-        return AttrDict(
-            await request(
-                self.address,
-                self.__i,
-                "hashtags/show",
-                {"tag": tag}
+                {"query": query, "limit": limit, "offset": offset},
             )
         )
 
-    async def hashtags_trend(
-        self
-    ):
+    async def hashtags_search(self, tag):
         return AttrDict(
-            await request(
-                self.address,
-                self.__i,
-                "hashtags/trend",
-                {}
-            )
+            await request(self.address, self.__i, "hashtags/show", {"tag": tag})
         )
 
-    async def hashtags_users(
-        self,
-        tag,
-        sort,
-        limit=10,
-        state="all",
-        origin="local"
-    ):
+    async def hashtags_trend(self):
+        return AttrDict(await request(self.address, self.__i, "hashtags/trend", {}))
+
+    async def hashtags_users(self, tag, sort, limit=10, state="all", origin="local"):
         return AttrDict(
             await request(
                 self.address,
                 self.__i,
                 "hashtags/users",
-                {"tag": tag, "sort": sort, "limit": limit, "state": state, "origin": origin}
+                {
+                    "tag": tag,
+                    "sort": sort,
+                    "limit": limit,
+                    "state": state,
+                    "origin": origin,
+                },
             )
         )
