@@ -4,4 +4,4 @@ The changelog on GitHub is only available in Japanese. For the changelog in othe
 
 # 2023.09.14
 - 依存ライブラリからhttpxを廃止(代替としてaiohttp、requestsを利用)
-- 依存ライブラリからwebsocketsを廃止(代替としてaiohttp.wsを利用)
+- - ~~依存ライブラリからwebsocketsを廃止(代替としてaiohttp.wsを利用)~~
