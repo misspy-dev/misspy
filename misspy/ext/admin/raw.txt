@@ -1,4 +1,4 @@
-Misskey API Admin Endpoint Original Document (Japanese)
+Misskey API Admin Endpoint UnOffical Document (Japanese)
 
 ※これはMisskey 13.14.2現在での情報を元に構成しているため、古くなっている可能性があります。
 ここでのエンドポイントの動作の確認にはacefed様のGitpod Misskeyを利用しています。

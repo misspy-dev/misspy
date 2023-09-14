@@ -1,3 +1,9 @@
+# Documents
+docs/*
+
+# example
+example/*
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -164,3 +170,6 @@ venv.txt
 #.idea/
 example/test.png
 example/box.py
+poetry.lock
+example/box.py
+*.lock

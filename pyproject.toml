@@ -1,19 +1,30 @@
 [tool.poetry]
 name = "misspy"
-version = "2023.08.27.dev1"
-description = "Misskey API library for Python with StreamingAPI support."
-authors = ["sonyakun <misspy@sonyakun.xyz>"]
+version = "2023.09.14"
+description = "misspy is Misskey API Library Written in Python."
+authors = ["sonyakun <contact@sonyakun.xyz>"]
 packages = [{include = "misspy"}]
 readme = "README.md"
-documentation = "https://misspy.sonyakun.xyz/en"
+documentation = "https://misspy.sonyakun.com/docs/en"
 repository = "https://github.com/sonyakun/misspy"
+
+[tool.poe.tasks]
+build = "poetry build"
+publish = "poetry publish"
 
 [tool.poetry.dependencies]
 python = "^3.8"
-httpx = "^0.24.1"
 websockets = "^11.0.3"
 attrdictionary = "^1.0.0"
+aiodns = "^3.0.0"
+aiohttp = "^3.8.5"
+faust-cchardet = { version = "^2.1.19", optional = true }
+poethepoet = { version = "^0.22.1", optional = true }
+requests = "^2.31.0"
 
+[tool.poetry.extras]
+speedups = ["faust-cchardet"]
+dev = ["poethepoet"]
 
 [build-system]
 requires = ["poetry-core"]

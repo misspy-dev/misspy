@@ -1,6 +1,7 @@
 import json
+import requests
 
-import httpx
+import aiohttp
 
 from .exception import HTTPException, ClientException
 
@@ -24,14 +25,14 @@ def request_sync(
     Returns:
         dict: request result
     """
-    with httpx.Client() as client:
-        url = address + "/api/" + endpoint
-        if i is not None:
-            jobj["i"] = i
-        res = client.post(
-            url, data=json.dumps(jobj, ensure_ascii=False), headers=header
-        )
+    url = address + "/api/" + endpoint
+    if i is not None:
+        jobj["i"] = i
+    res = requests.post(url, data=json.dumps(jobj, ensure_ascii=False), headers=header)
+    try:
         return res.json()
+    except:
+        return True
 
 
 async def request(
@@ -53,7 +54,7 @@ async def request(
     Returns:
         dict: request result
     """
-    async with httpx.AsyncClient() as client:
+    async with aiohttp.ClientSession() as client:
         url = address + "/api/" + endpoint
         if i is not None:
             jobj["i"] = i
@@ -61,14 +62,14 @@ async def request(
             if header is not None:
                 res = await client.post(
                     url,
-                    data=json.dumps(jobj, ensure_ascii=False),
+                    data=jobj,
                     files=files,
                     headers=header,
                 )
             else:
                 res = await client.post(
                     url,
-                    data=json.dumps(jobj, ensure_ascii=False),
+                    data=jobj,
                     files=files,
                 )
             try:
@@ -80,7 +81,7 @@ async def request(
                             + res.json()["error"]["id"]
                         )
                     else:
-                        return res.json()
+                        return await res.json()
                 except AttributeError:
                     return json.loads(res.text)
             except json.decoder.JSONDecodeError:
@@ -91,13 +92,13 @@ async def request(
                     url, data=json.dumps(jobj, ensure_ascii=False), headers=header
                 )
                 try:
-                    return res.json()
+                    return await res.json()
                 except json.JSONDecodeError:
                     return True
             else:
                 res = await client.post(url, data=json.dumps(jobj, ensure_ascii=False))
                 try:
-                    return res.json()
+                    return await res.json()
                 except json.JSONDecodeError:
                     return True
 
@@ -116,7 +117,7 @@ async def request_guest(
     Returns:
         dict: request result
     """
-    async with httpx.AsyncClient() as client:
+    async with aiohttp.ClientSession() as client:
         res = await client.post(
             address + "/api/" + endpoint,
             data=json.dumps(jobj, ensure_ascii=False),

@@ -17,6 +17,7 @@ async def create(address, i, noteId, reaction):
         address, i, "notes/reactions/create", {"noteId": noteId, "reaction": reaction}
     )
 
+
 async def delete(address, i, noteId):
     """delete reaction.
 
