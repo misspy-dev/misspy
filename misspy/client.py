@@ -17,14 +17,12 @@ class Bot:
     Class used to connect and interact with the Misskey Streaming API.
     """
 
-    def __init__(self, address, i=None, enable_logging=True) -> None:
+    def __init__(self, address, i=None) -> None:
         self.__address = address
         if not address.startswith("http://") and not address.startswith("https://"):
             self.address = "https://" + address
         self.__i = i
         self.bot = self.user()
-        if enable_logging == False:
-            log.enablelog = False
 
     def user(self):
         return AttrDict(request_sync(self.address, self.__i, "i", {}))
@@ -61,28 +59,30 @@ class Bot:
                 pass
             while True:
                 recv = json.loads(await self.ws.recv())
-                if recv["type"] == "channel":
-                    if recv["body"]["type"] == "note":
-                        hook.functions[recv["body"]["type"]](
-                            AttrDict(recv["body"]["body"])
-                        )
-                    elif recv["body"]["type"] == "notification":
-                        if recv["body"]["type"] == "follow":
+                try:
+                    if recv["type"] == "channel":
+                        if recv["body"]["type"] == "note":
                             hook.functions[recv["body"]["type"]](
                                 AttrDict(recv["body"]["body"])
                             )
-                        else:
+                        elif recv["body"]["type"] == "notification":
                             hook.functions[recv["body"]["body"]["type"]](
                                 AttrDict(recv["body"]["body"])
                             )
-                    elif recv["body"]["type"] == "followed":
-                        hook.functions[recv["body"]["type"]](
-                            AttrDict(recv["body"]["body"])
-                        )
-                    elif recv["type"] == "noteUpdated":
-                        hook.functions[recv["body"]["type"]](AttrDict(recv["body"]))
-                    else:
-                        hook.functions[recv["body"]["type"]](AttrDict(recv["body"]))
+                        elif recv["body"]["type"] == "follow":
+                            hook.functions[recv["body"]["type"]](
+                                AttrDict(recv["body"]["body"])
+                            )
+                        elif recv["body"]["type"] == "followed":
+                            hook.functions[recv["body"]["type"]](
+                                AttrDict(recv["body"]["body"])
+                            )
+                        elif recv["type"] == "noteUpdated":
+                            hook.functions[recv["body"]["type"]](AttrDict(recv["body"]))
+                        else:
+                            hook.functions[recv["body"]["type"]](AttrDict(recv["body"]))
+                except KeyError:
+                    pass
 
     async def recv(self):
         await self.ws.start(handler=self.ws_handler)
