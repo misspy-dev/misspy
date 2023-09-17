@@ -1,4 +1,7 @@
 changelog:
+  exclude:
+    authors:
+      - github-actions # <-- 追加
   categories:
     - title: What's Changed ✨
       labels:
