@@ -2,6 +2,8 @@ The changelog on GitHub is only available in Japanese. For the changelog in othe
 
 ここには、2023.09.14以降のすべての変更ログが記されています。
 
+# 2023.09.17
+- 依存関係にhttpxを追加
+
 # 2023.09.14
 - 依存ライブラリからhttpxを廃止(代替としてaiohttp、requestsを利用)
-- 依存ライブラリからwebsocketsを廃止(代替としてaiohttp.wsを利用)
