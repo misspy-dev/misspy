@@ -1,7 +1,16 @@
 import misspy
 
-bot = misspy.Bot("misskey.io")
+class MyMisskeyBot(misspy.Bot):
 
-meta = bot.meta()
+    async def on_ready(self):
+        await self.connect("localTimeline")
+        print("ready")
 
-print(meta.name)
+    async def on_note(self, message):
+        print(message.user.name)
+        print(message.text)
+        print("--------------------")
+
+# インスタンス化して実行
+bot = MyMisskeyBot("8080-acefed-gitpodmisskey-etifwxfnh5d.ws-us104.gitpod.io", "MVsDf8iQkT6MZIdY3rIgJ2pqRCb0naOr")
+bot.run()
