@@ -385,7 +385,7 @@ async def create(
     if replyid is not None:
         base["replyid"] = replyid
     if fileid is not None:
-        base["fileid"] = fileid
+        base["fileIds"] = fileid
     if channelId is not None:
         base["channelId"] = channelId
     if renoteId is not None:
