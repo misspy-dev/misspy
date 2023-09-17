@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "misspy"
-version = "2023.09.14"
+version = "2023.09.17"
 description = "misspy is Misskey API Library Written in Python."
 authors = ["sonyakun <contact@sonyakun.xyz>"]
 packages = [{include = "misspy"}]
