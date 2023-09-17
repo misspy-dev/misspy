@@ -177,3 +177,4 @@ poetry.lock
 example/box.py
 *.lock
 *.lock
+example/box.py
