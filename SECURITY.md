@@ -12,4 +12,4 @@ Because of the small number of versions of misspy, only the latest version (incl
 | < 4.0   | :x:                | -->
 
 ## Reporting a Vulnerability
-Please contact [misspy@sonyakun.xyz](mailto:misspy@sonyakun.xyz?subject=Vulnerability%20Reporting).
+Please contact [misspy@sonyakun.com](mailto:misspy@sonyakun.com?subject=Vulnerability%20Reporting).
