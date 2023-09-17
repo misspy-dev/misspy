@@ -2,6 +2,7 @@ import json
 import requests
 
 import aiohttp
+import httpx
 
 from .exception import HTTPException, ClientException
 
@@ -54,7 +55,7 @@ async def request(
     Returns:
         dict: request result
     """
-    async with aiohttp.ClientSession() as client:
+    async with httpx.AsyncClient() as client:
         url = address + "/api/" + endpoint
         if i is not None:
             jobj["i"] = i
@@ -67,11 +68,7 @@ async def request(
                     headers=header,
                 )
             else:
-                res = await client.post(
-                    url,
-                    data=jobj,
-                    files=files,
-                )
+                res = await client.post(url, files=files, data=jobj)
             try:
                 try:
                     if json.loads(res.text).get("error").get("kind") is not None:
@@ -81,7 +78,7 @@ async def request(
                             + res.json()["error"]["id"]
                         )
                     else:
-                        return await res.json()
+                        return res.json()
                 except AttributeError:
                     return json.loads(res.text)
             except json.decoder.JSONDecodeError:
@@ -92,13 +89,13 @@ async def request(
                     url, data=json.dumps(jobj, ensure_ascii=False), headers=header
                 )
                 try:
-                    return await res.json()
+                    return res.json()
                 except json.JSONDecodeError:
                     return True
             else:
                 res = await client.post(url, data=json.dumps(jobj, ensure_ascii=False))
                 try:
-                    return await res.json()
+                    return res.json()
                 except json.JSONDecodeError:
                     return True
 

@@ -1,5 +1,5 @@
 class MisskeyException(Exception):
-    """Base exception class for misspy.core
+    """Base exception class for misspy
 
     Ideally, this should be caught and the exception handled.
     """
@@ -7,8 +7,8 @@ class MisskeyException(Exception):
     pass
 
 
-class WebsocketClosed(MisskeyException):
-    """websocket connection closed error class for misspy.core
+class WebsocketError(MisskeyException):
+    """websocket connection error class for misspy
 
     Ideally, this should be caught and the exception handled.
     """

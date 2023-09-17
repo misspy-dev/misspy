@@ -1,3 +1,6 @@
+# VSCode
+.vscode/
+
 # Documents
 docs/*
 
@@ -173,3 +176,5 @@ example/box.py
 poetry.lock
 example/box.py
 *.lock
+*.lock
+example/box.py
