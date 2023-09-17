@@ -5,8 +5,8 @@ import websockets
 from attrdictionary import AttrDict
 
 from . import notes
-from . import log
-from . import hook
+from . import exception
+from .hook import hook
 from .http import request
 from .http import request_sync
 from .util import nonecheck
@@ -21,6 +21,8 @@ class Bot:
         self.__address = address
         if not address.startswith("http://") and not address.startswith("https://"):
             self.address = "https://" + address
+        else:
+            self.address = address
         self.__i = i
         self.bot = self.user()
 
@@ -50,39 +52,46 @@ class Bot:
         return AttrDict(await request(self.address, self.__i, "announcements", data))
 
     async def ws_handler(self):
-        async with websockets.connect(
-            f"wss://{self.__address}/streaming?i={self.__i}"
-        ) as self.ws:
-            try:
-                await self.on_ready()
-            except AttributeError:
-                pass
-            while True:
-                recv = json.loads(await self.ws.recv())
+        try:
+            async with websockets.connect(
+                f"wss://{self.__address}/streaming?i={self.__i}"
+            ) as self.ws:
                 try:
-                    if recv["type"] == "channel":
-                        if recv["body"]["type"] == "note":
-                            hook.functions[recv["body"]["type"]](
-                                AttrDict(recv["body"]["body"])
-                            )
-                        elif recv["body"]["type"] == "notification":
-                            hook.functions[recv["body"]["body"]["type"]](
-                                AttrDict(recv["body"]["body"])
-                            )
-                        elif recv["body"]["type"] == "follow":
-                            hook.functions[recv["body"]["type"]](
-                                AttrDict(recv["body"]["body"])
-                            )
-                        elif recv["body"]["type"] == "followed":
-                            hook.functions[recv["body"]["type"]](
-                                AttrDict(recv["body"]["body"])
-                            )
-                        elif recv["type"] == "noteUpdated":
-                            hook.functions[recv["body"]["type"]](AttrDict(recv["body"]))
-                        else:
-                            hook.functions[recv["body"]["type"]](AttrDict(recv["body"]))
+                    await hook.functions["ready"]()
                 except KeyError:
                     pass
+                while True:
+                    recv = json.loads(await self.ws.recv())
+                    try:
+                        if recv["type"] == "channel":
+                            if recv["body"]["type"] == "note":
+                                await hook.functions[recv["body"]["type"]](
+                                    AttrDict(recv["body"]["body"])
+                                )
+                            elif recv["body"]["type"] == "notification":
+                                await hook.functions[recv["body"]["body"]["type"]](
+                                    AttrDict(recv["body"]["body"])
+                                )
+                            elif recv["body"]["type"] == "follow":
+                                await hook.functions[recv["body"]["type"]](
+                                    AttrDict(recv["body"]["body"])
+                                )
+                            elif recv["body"]["type"] == "followed":
+                                await hook.functions[recv["body"]["type"]](
+                                    AttrDict(recv["body"]["body"])
+                                )
+                            elif recv["type"] == "noteUpdated":
+                                await hook.functions[recv["body"]["type"]](
+                                    AttrDict(recv["body"])
+                                )
+                            else:
+                                await hook.functions[recv["body"]["type"]](
+                                    AttrDict(recv["body"])
+                                )
+                    except KeyError:
+                        pass
+        except asyncio.TimeoutError as e:
+            raise exception.WebsocketError(e)
 
     async def recv(self):
         await self.ws.start(handler=self.ws_handler)
@@ -641,9 +650,8 @@ class Bot:
         Returns:
             AttrDict: You can get the contents in a format like a.b.
         """
-
-        return AttrDict(
-            await notes.create(
+        AttrDict()
+        return await notes.create(
                 self.address,
                 self.__i,
                 text,
@@ -655,7 +663,7 @@ class Bot:
                 localOnly,
                 renoteId,
             )
-        )
+        
 
     async def pages_create(
         self,
@@ -830,11 +838,10 @@ class Bot:
             base["folderId"] = folderId
         if name is not None:
             base["name"] = name
-        return AttrDict(
-            await request(
+        AttrDict()
+        return await request(
                 self.address, self.__i, "drive/files/create", base, files={"file": file}
             )
-        )
 
     async def drive_files_upload_from_url(
         self,
