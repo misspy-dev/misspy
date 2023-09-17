@@ -24,7 +24,7 @@ class ColoredStreamHandler(logging.StreamHandler):
 class log:
     if enablelog:
         logger = logging.getLogger()
-        logger.setLevel(logging.DEBUG)
+        logger.setLevel(logging.INFO)
         dt = datetime.datetime.now()
         formatter = logging.Formatter(
             "[{}] %(levelname)s %(message)s".format(dt.strftime("%H:%M:%S"))
