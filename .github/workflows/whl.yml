@@ -14,7 +14,6 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - uses: actions/upload-artifact@v3
     - name: Set up Python
       uses: actions/setup-python@v1
       with:
@@ -24,6 +23,7 @@ jobs:
         python -m pip install --upgrade pip
         pip install poetry poetry-dynamic-versioning twine
     - name: Build and upload
+      uses: actions/upload-artifact@v3
       with:
         run: |
           poetry build
