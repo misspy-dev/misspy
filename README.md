@@ -34,19 +34,22 @@ mi = misspy.Bot(address, i=token)
 ```python
 import misspy
 from misspy.ext import MiAuth
+from misspy.hook import hook
+
+bot = misspy.Bot("misskey.io", i=token)
+
+async def on_ready():
+    bot.connect("localTimeline")
+    print("running")
+
+async def on_note(message):
+    print("------------")
+    print(message.text)
+    print("------------")
 
 
-class StreamingBot(misspy.Bot):
-    async def on_ready(self):
-        print("running")
-
-    async def on_note(self, message):
-        print("------------")
-        print(message.text)
-        print("------------")
-
-
-bot = StreamingBot("misskey.io", i=token)
+hook.add("note", on_note)
+hook.add("ready", on_ready)
 bot.run()
 ```
 
