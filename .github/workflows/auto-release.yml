@@ -20,16 +20,24 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install poetry poetry-dynamic-versioning twine
-      - name: Get previous tag
-        id: pre_tag
+      - name: Get release info
         run: |
-          echo "::set-output name=pre_tag::$(curl -H 'Accept: application/vnd.github.v3+json' -H 'Authorization: token ${{ secrets.GITHUB_TOKEN }}' https://api.github.com/repos/${{ github.repository }}/releases/latest | jq -r .tag_name)"
+          response=$(curl -s https://api.github.com/repos/misspy-development/misspy/releases/latest)
+          echo "::set-output name=tag::$(echo $response | jq -r '.tag_name')"
+        id: release
+
+      - name: Display latest tag
+        run: |
+          echo "latest release tag is ${{ steps.release.outputs.tag }}"
       - name: Update pyproject.toml
         uses: ciiiii/toml-editor@1.0.0
+        env:
+          RELEASE_TAG: ${{ steps.release.outputs.tag }}
         with:
           file: "pyproject.toml"
           key: "tool.poetry.version"
-          value: steps.pre_tag.outputs.pre_tag
+          value: |
+            $RELEASE_TAG
       - name: Build and publish
         env:
           PYPI_TOKEN: ${{ secrets.PYPI_TOKEN }}
@@ -43,21 +51,30 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Get previous tag
-        id: pre_tag
+      - name: Get release info
         run: |
-          echo "::set-output name=pre_tag::$(curl -H 'Accept: application/vnd.github.v3+json' -H 'Authorization: token ${{ secrets.GITHUB_TOKEN }}' https://api.github.com/repos/${{ github.repository }}/releases/latest | jq -r .tag_name)"
+          response=$(curl -s https://api.github.com/repos/misspy-development/misspy/releases/latest)
+          echo "::set-output name=tag::$(echo $response | jq -r '.tag_name')"
+        id: release
 
+      - name: Display latest tag
+        run: |
+          echo "latest release tag is ${{ steps.release.outputs.tag }}"
       - name: Update pyproject.toml
         uses: ciiiii/toml-editor@1.0.0
+        env:
+          RELEASE_TAG: ${{ steps.release.outputs.tag }}
         with:
           file: "pyproject.toml"
           key: "tool.poetry.version"
-          value: steps.pre_tag.outputs.pre_tag
+          value: |
+            $RELEASE_TAG
 
       - name: Push to release branch
         env:
           USER_TOKEN: ${{ secrets.USER_TOKEN }}
         run: |
           git remote set-url origin https://$USER_TOKEN@github.com/misspy-development/misspy.git
-          git push --force-with-lease origin develop:release
+          git commit -m "update library version"
+          git push --force-with-lease origin develop
+          git push --force-with-lease origin develop:master
