@@ -16,10 +16,12 @@ jobs:
         uses: actions/setup-python@v1
         with:
           python-version: '3.x'
+          
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install poetry poetry-dynamic-versioning twine
+          
       - name: Get release info
         run: |
           response=$(curl -s https://api.github.com/repos/misspy-development/misspy/releases/latest)
@@ -31,12 +33,12 @@ jobs:
           echo "latest release tag is ${{ steps.release.outputs.tag }}"
       - name: Update pyproject.toml
         uses: ciiiii/toml-editor@1.0.0
-        env:
-          RELEASE_TAG: ${{ steps.release.outputs.tag }}
         with:
           file: "pyproject.toml"
           key: "tool.poetry.version"
-          value: $RELEASE_TAG
+          value: |
+            "${{ steps.release.outputs.tag }}"
+          
       - name: Build and publish
         env:
           PYPI_TOKEN: ${{ secrets.PYPI_TOKEN }}
@@ -63,12 +65,11 @@ jobs:
 
       - name: Update pyproject.toml
         uses: ciiiii/toml-editor@1.0.0
-        env:
-          RELEASE_TAG: ${{ steps.release.outputs.tag }}
         with:
           file: "pyproject.toml"
           key: "tool.poetry.version"
-          value: $RELEASE_TAG
+          value: |
+            "${{ steps.release.outputs.tag }}"
 
       - name: Push to release branch
         env:
