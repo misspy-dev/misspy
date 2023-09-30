@@ -1,3 +1,4 @@
+from __future__ import annotations
 import asyncio
 import json
 
@@ -17,17 +18,22 @@ class Bot:
     Class used to connect and interact with the Misskey Streaming API.
     """
 
-    def __init__(self, address, i=None) -> None:
+    def __init__(self, address, i=None, ssl=True) -> None:
+        self.ssl = False
+        if ssl:
+            self.ssl = True
         self.__address = address
         if not address.startswith("http://") and not address.startswith("https://"):
-            self.address = "https://" + address
+            self.address = "http://" + address
+            if ssl:
+                self.address = "https://" + address
         else:
             self.address = address
         self.__i = i
         self.bot = self.user()
 
     def user(self):
-        return AttrDict(request_sync(self.address, self.__i, "i", {}))
+        return AttrDict(request_sync(self.address, self.__i, "i", {}, ssl=self.ssl))
 
     def meta(self, detail: bool = True):
         return AttrDict(
@@ -53,8 +59,11 @@ class Bot:
 
     async def ws_handler(self):
         try:
+            procotol = "ws://"
+            if self.ssl:
+                procotol = "wss://"
             async with websockets.connect(
-                f"wss://{self.__address}/streaming?i={self.__i}"
+                f"{procotol}{self.__address}/streaming?i={self.__i}"
             ) as self.ws:
                 try:
                     await hook.functions["ready"]()
@@ -629,6 +638,7 @@ class Bot:
         text=None,
         visibility="public",
         visibleUserIds: list = None,
+        cw: str = None,
         replyid=None,
         fileid=None,
         channelId=None,
@@ -650,20 +660,21 @@ class Bot:
         Returns:
             AttrDict: You can get the contents in a format like a.b.
         """
-        AttrDict()
-        return await notes.create(
+        return AttrDict(
+            await notes.create(
                 self.address,
                 self.__i,
                 text,
                 visibility,
                 visibleUserIds,
+                cw,
                 replyid,
                 fileid,
                 channelId,
                 localOnly,
                 renoteId,
             )
-        
+        )
 
     async def pages_create(
         self,
@@ -840,8 +851,8 @@ class Bot:
             base["name"] = name
         AttrDict()
         return await request(
-                self.address, self.__i, "drive/files/create", base, files={"file": file}
-            )
+            self.address, self.__i, "drive/files/create", base, files={"file": file}
+        )
 
     async def drive_files_upload_from_url(
         self,

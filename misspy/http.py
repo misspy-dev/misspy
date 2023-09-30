@@ -13,6 +13,7 @@ def request_sync(
     endpoint="test",
     jobj: dict = {"required": True},
     header: dict = {"Content-Type": "application/json"},
+    ssl: bool=True
 ):
     """request_sync (internal function)
 
@@ -29,7 +30,7 @@ def request_sync(
     url = address + "/api/" + endpoint
     if i is not None:
         jobj["i"] = i
-    res = requests.post(url, data=json.dumps(jobj, ensure_ascii=False), headers=header)
+    res = requests.post(url, data=json.dumps(jobj, ensure_ascii=False), headers=header, verify=ssl)
     try:
         return res.json()
     except:
