@@ -16,66 +16,14 @@ jobs:
         uses: actions/setup-python@v1
         with:
           python-version: '3.x'
-          
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install poetry poetry-dynamic-versioning twine
-          
-      - name: Get release info
-        run: |
-          response=$(curl -s https://api.github.com/repos/misspy-development/misspy/releases/latest)
-          echo "tag=$(echo $response | jq -r '.tag_name')" >> $GITHUB_OUTPUT
-        id: release
-
-      - name: Display latest tag
-        run: |
-          echo "latest release tag is ${{ steps.release.outputs.tag }}"
-      - name: Update pyproject.toml
-        uses: ciiiii/toml-editor@1.0.0
-        with:
-          file: "pyproject.toml"
-          key: "tool.poetry.version"
-          value: |
-            "${{ steps.release.outputs.tag }}"
-          
+          pip install poetry poetry-dynamic-versioning twine misspy-packager
       - name: Build and publish
         env:
           PYPI_TOKEN: ${{ secrets.PYPI_TOKEN }}
-        run: |
-          poetry config pypi-token.pypi $PYPI_TOKEN
-          poetry publish --build
-
-  copy-to-release:
-    runs-on: ubuntu-latest
-    steps:
-
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Get release info
-        run: |
-          response=$(curl -s https://api.github.com/repos/misspy-development/misspy/releases/latest)
-          echo "tag=$(echo $response | jq -r '.tag_name')" >> $GITHUB_OUTPUT
-        id: release
-
-      - name: Display latest tag
-        run: |
-          echo "latest release tag is ${{ steps.release.outputs.tag }}"
-
-      - name: Update pyproject.toml
-        uses: ciiiii/toml-editor@1.0.0
-        with:
-          file: "pyproject.toml"
-          key: "tool.poetry.version"
-          value: |
-            "${{ steps.release.outputs.tag }}"
-
-      - name: Push to release branch
-        env:
           USER_TOKEN: ${{ secrets.USER_TOKEN }}
         run: |
-          git remote set-url origin https://$USER_TOKEN@github.com/misspy-development/misspy.git
-          git commit -m "update library version"
-          git push --force-with-lease origin develop
-          git push --force-with-lease origin develop:master
+          poetry config pypi-token.pypi $PYPI_TOKEN
+          mspy_pkg publish $USER_TOKEN
