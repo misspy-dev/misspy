@@ -340,6 +340,7 @@ async def create(
     text: str = None,
     visibility="public",
     visibleUserIds: list = None,
+    cw=None,
     replyid=None,
     fileid=None,
     channelId=None,
@@ -371,6 +372,7 @@ async def create(
         "localOnly": localOnly,
         "noExtractMentions": noExtractMentions,
         "noExtractEmojis": noExtractEmojis,
+        "cw": cw
     }
     if poll is not None:
         base["poll"] = {}
