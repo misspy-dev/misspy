@@ -23,7 +23,7 @@ jobs:
       - name: Get release info
         run: |
           response=$(curl -s https://api.github.com/repos/misspy-development/misspy/releases/latest)
-          echo "::set-output name=tag::$(echo $response | jq -r '.tag_name')"
+          echo "tag=$(echo $response | jq -r '.tag_name')" >> $GITHUB_OUTPUT
         id: release
 
       - name: Display latest tag
@@ -36,8 +36,7 @@ jobs:
         with:
           file: "pyproject.toml"
           key: "tool.poetry.version"
-          value: |
-            $RELEASE_TAG
+          value: $RELEASE_TAG
       - name: Build and publish
         env:
           PYPI_TOKEN: ${{ secrets.PYPI_TOKEN }}
@@ -48,18 +47,20 @@ jobs:
   copy-to-release:
     runs-on: ubuntu-latest
     steps:
+
       - name: Checkout code
         uses: actions/checkout@v2
 
       - name: Get release info
         run: |
           response=$(curl -s https://api.github.com/repos/misspy-development/misspy/releases/latest)
-          echo "::set-output name=tag::$(echo $response | jq -r '.tag_name')"
+          echo "tag=$(echo $response | jq -r '.tag_name')" >> $GITHUB_OUTPUT
         id: release
 
       - name: Display latest tag
         run: |
           echo "latest release tag is ${{ steps.release.outputs.tag }}"
+
       - name: Update pyproject.toml
         uses: ciiiii/toml-editor@1.0.0
         env:
@@ -67,8 +68,7 @@ jobs:
         with:
           file: "pyproject.toml"
           key: "tool.poetry.version"
-          value: |
-            $RELEASE_TAG
+          value: $RELEASE_TAG
 
       - name: Push to release branch
         env:
