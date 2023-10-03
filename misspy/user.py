@@ -5,9 +5,10 @@ from .http import request, request_sync
 
 class i:
     
-    def __init__(self, address, i) -> None:
+    def __init__(self, address, i, ssl=True) -> None:
         self.i = i
         self.address = address
+        self.ssl = ssl
 
     async def get(self):
         r = await request(self.address, self.__i, "i", {})

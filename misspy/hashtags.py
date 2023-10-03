@@ -4,9 +4,10 @@ from .http import request
 
 class hashtags:
 
-    def __init__(self, address, i) -> None:
+    def __init__(self, address, i, ssl=True) -> None:
         self.i = i
         self.address = address
+        self.ssl = ssl
 
     async def list(
         self,

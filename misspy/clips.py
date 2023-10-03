@@ -5,9 +5,10 @@ from .http import request
 
 class server:
 
-    def __init__(self, address, i) -> None:
+    def __init__(self, address, i, ssl=True) -> None:
         self.i = i
         self.address = address
+        self.ssl = ssl
 
     async def clips_create(self, name, isPublic=False, description=None):
         return AttrDict(

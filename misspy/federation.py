@@ -5,9 +5,10 @@ from .http import request
 
 class federation:
 
-    def __init__(self, address, i) -> None:
+    def __init__(self, address, i, ssl=True) -> None:
         self.i = i
         self.address = address
+        self.ssl = ssl
 
     async def followers(self, host, limit=10, sinceId=None, untilId=None):
         base = {"host": host, "limit": limit}

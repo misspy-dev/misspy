@@ -9,9 +9,10 @@ from . import exception
 
 class MiWS:
     
-    def __init__(self, address, i) -> None:
+    def __init__(self, address, i, ssl=True) -> None:
         self.i = i
         self.address = address
+        self.ssl = ssl
     
     async def ws_handler(self):
         try:

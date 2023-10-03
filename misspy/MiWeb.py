@@ -4,9 +4,10 @@ from .http import request, request_sync
 
 class MiWeb:
 
-    def __init__(self, address, i) -> None:
+    def __init__(self, address, i, ssl=True) -> None:
         self.i = i
         self.address = address
+        self.ssl = ssl
 
     def request_reset_password(instance, username, email):
         return request_sync(

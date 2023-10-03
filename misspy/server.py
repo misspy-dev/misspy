@@ -4,9 +4,10 @@ from .http import request, request_sync
 
 class server:
     
-    def __init__(self, address, i) -> None:
+    def __init__(self, address, i, ssl=True) -> None:
         self.i = i
         self.address = address
+        self.ssl = ssl
 
     def user(self):
         return AttrDict(request_sync(self.address, self.__i, "i", {}, ssl=self.ssl))
