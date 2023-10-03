@@ -2,7 +2,7 @@ name: Upload Python Package
 
 on:
  release: 
-   types: [prereleased, released]
+   types: [created, edited, released]
  workflow_dispatch:
 
 jobs:
