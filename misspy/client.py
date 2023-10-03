@@ -76,6 +76,7 @@ class Bot:
         self.ssl = False
         if ssl:
             self.ssl = True
+
         if not address.startswith("http://") and not address.startswith("https://"):
             self.address = "http://" + address
             if ssl:
@@ -102,6 +103,7 @@ class Bot:
 
     def run(self):
         asyncio.run(self.ws.ws_handler())
+
 
     async def connect(self, channel):
         await self.ws.connection.send(
@@ -135,6 +137,7 @@ class Bot:
                 }
             )
         )
+
 
     async def pinned_users(self):
         return AttrDict(request(self.address, self.__i, "pinned-users", {}))
