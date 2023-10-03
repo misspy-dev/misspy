@@ -1,4 +1,4 @@
-name: release
+name: Upload Python Package
 
 on:
  release: 
@@ -10,6 +10,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - name: 'Get Release tag'
+        id: previoustag
+        uses: "WyriHaximus/github-action-get-previous-tag@v1"
+        with:
+          fallback: 0.0.0 # Optional fallback tag to use when no tag can be found
       - name: Set up Python
         uses: actions/setup-python@v3
         with:
@@ -27,6 +32,7 @@ jobs:
           poetry config pypi-token.pypi ${{secrets.PYPI_TOKEN}}
       - name: Build Poetry
         run: |
+          git tag ${{ steps.previoustag.outputs.tag }}
           poetry build
           poetry publish
       - name: Gets latest created release info
