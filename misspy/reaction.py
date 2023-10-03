@@ -1,32 +1,39 @@
+from typing import Any
 from .http import request
 
 
-async def create(address, i, noteId, reaction):
-    """create reaction.
+class reactions:
+    
+    def __init__(self, address, i) -> None:
+        self.i = i
+        self.address = address
 
-    Args:
-        address (string): instance address
-        i (string): user token
-        noteId (string): noteId
-        reaction (string): Specify reaction. Reactions are Unicode emojis or custom emojis. For custom emoji, enclose the emoji name with a colon.
+    async def create(address, i, noteId, reaction):
+        """create reaction.
 
-    Returns:
-        dict: Misskey API response
-    """
-    return await request(
-        address, i, "notes/reactions/create", {"noteId": noteId, "reaction": reaction}
-    )
+        Args:
+            address (string): instance address
+            i (string): user token
+            noteId (string): noteId
+            reaction (string): Specify reaction. Reactions are Unicode emojis or custom emojis. For custom emoji, enclose the emoji name with a colon.
+
+        Returns:
+            dict: Misskey API response
+        """
+        return await request(
+            address, i, "notes/reactions/create", {"noteId": noteId, "reaction": reaction}
+        )
 
 
-async def delete(address, i, noteId):
-    """delete reaction.
+    async def delete(address, i, noteId):
+        """delete reaction.
 
-    Args:
-        address (string): instance address
-        i (string): user token
-        noteId (string): noteId
+        Args:
+            address (string): instance address
+            i (string): user token
+            noteId (string): noteId
 
-    Returns:
-        dict: Misskey API response
-    """
-    return await request(address, i, "notes/reactions/delete", {"noteId": noteId})
+        Returns:
+            dict: Misskey API response
+        """
+        return await request(address, i, "notes/reactions/delete", {"noteId": noteId})

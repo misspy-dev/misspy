@@ -6,6 +6,6 @@ from .auth import app
 from . import http
 from . import util
 from . import exception
-from .hook import hook
+from .client import hook
 
 __version__ = pkg_resources.get_distribution("misspy").version
