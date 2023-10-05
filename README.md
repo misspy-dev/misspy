@@ -17,6 +17,9 @@ This library is developed based on the API specification for Misskey v13 or late
 # example
 **Other examples can be found in the examples directory.**
 
+> This is the implementation as of 2023.9.14.
+Note that the syntax is different in 2023.10.dev0 and later versions.
+
 ## send note
 ```python
 import misspy
