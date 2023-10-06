@@ -6,13 +6,14 @@ import httpx
 
 from .exception import HTTPException, ClientException, RateLimitError
 
+h_t = {"Content-Type": "application/json"}
 
 def request_sync(
     address,
     i=None,
     endpoint="test",
     jobj: dict = {"required": True},
-    header: dict = {"Content-Type": "application/json"},
+    header: dict = h_t,
     ssl: bool=True
 ):
     """request_sync (internal function)
@@ -21,7 +22,7 @@ def request_sync(
         address (string): instance address
         i (string): user token
         endpoint (string): endpoint (example: notes/create)
-        jobj (dict): request params. Do not include the i.
+        jobj (dict): request params. Do not include the i. Defaults to {"Content-Type": "application/json"}.
         header (dict, optional): request header. Defaults to {"Content-Type": "application/json"}.
 
     Returns:
@@ -43,7 +44,7 @@ async def request(
     endpoint="ping",
     jobj: dict = {},
     files=None,
-    header={"content-type": "application/json"},
+    header=h_t,
 ):
     """request (internal function)
 
@@ -103,7 +104,7 @@ async def request(
             return resp
 
 async def request_guest(
-    address, endpoint, jobj: dict, header: dict = {"Content-Type": "application/json"}
+    address, endpoint, jobj: dict, header: dict = h_t
 ):
     """request (internal function)
 
