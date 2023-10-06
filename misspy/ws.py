@@ -3,23 +3,25 @@ import json
 
 from attrdictionary import AttrDict
 import websockets
+import aiohttp
 
-from .client import hook
+from .hook import hook
 from . import exception
 
+
 class MiWS:
-    
     def __init__(self, address, i, ssl=True) -> None:
         self.i = i
         self.address = address
         self.ssl = ssl
-    
+
     async def ws_handler(self):
         try:
             procotol = "ws://"
             if self.ssl:
                 procotol = "wss://"
-            async with websockets.connect(
+            session = aiohttp.ClientSession()
+            async with session.ws_connect(
                 f"{procotol}{self.address}/streaming?i={self.i}"
             ) as self.connection:
                 try:
@@ -27,7 +29,10 @@ class MiWS:
                 except KeyError:
                     pass
                 while True:
-                    recv = json.loads(await self.connection.recv())
+                    try:
+                        recv = await self.connection.receive_json()
+                    except AttributeError:
+                        pass
                     try:
                         if recv["type"] == "channel":
                             if recv["body"]["type"] == "note":
