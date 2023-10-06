@@ -6,6 +6,9 @@ from .auth import app
 from . import http
 from . import util
 from . import exception
-from .client import hook
+from .hook import hook
 
-__version__ = pkg_resources.get_distribution("misspy").version
+try:
+    __version__ = pkg_resources.get_distribution("misspy").version
+except pkg_resources.DistributionNotFound:
+    __version__ = "0.0.0.ldev"
