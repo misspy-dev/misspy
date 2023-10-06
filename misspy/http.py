@@ -4,7 +4,7 @@ import requests
 import aiohttp
 import httpx
 
-from .exception import HTTPException, ClientException
+from .exception import HTTPException, ClientException, RateLimitError
 
 
 def request_sync(
@@ -40,10 +40,10 @@ def request_sync(
 async def request(
     address,
     i=None,
-    endpoint="test",
-    jobj: dict = {"required": True},
+    endpoint="ping",
+    jobj: dict = {},
     files=None,
-    header=None,
+    header={"content-type": "application/json"},
 ):
     """request (internal function)
 
@@ -56,50 +56,57 @@ async def request(
     Returns:
         dict: request result
     """
-    async with httpx.AsyncClient() as client:
+    async with aiohttp.ClientSession() as client:
         url = address + "/api/" + endpoint
         if i is not None:
             jobj["i"] = i
         if files is not None:
-            if header is not None:
-                res = await client.post(
-                    url,
-                    data=jobj,
-                    files=files,
-                    headers=header,
-                )
-            else:
-                res = await client.post(url, files=files, data=jobj)
+            async with httpx.AsyncClient() as client:
+                if header is not None:
+                    res = await client.post(
+                        url,
+                        data=jobj,
+                        files=files,
+                        headers=header,
+                    )
+                else:
+                    res = await client.post(url, files=files, data=jobj)
             try:
-                try:
-                    if json.loads(res.text).get("error").get("kind") is not None:
-                        raise ClientException(
-                            res.json()["error"]["message"]
-                            + "\nid: "
-                            + res.json()["error"]["id"]
-                        )
-                    else:
-                        return res.json()
-                except AttributeError:
-                    return json.loads(res.text)
-            except json.decoder.JSONDecodeError:
-                raise HTTPException(res.status_code)
+                resp = res.json()
+            except json.JSONDecodeError:
+                resp = json.loads(res.text)
         else:
             if header is not None:
                 res = await client.post(
                     url, data=json.dumps(jobj, ensure_ascii=False), headers=header
                 )
                 try:
-                    return res.json()
+                    return await res.json()
                 except json.JSONDecodeError:
                     return True
             else:
                 res = await client.post(url, data=json.dumps(jobj, ensure_ascii=False))
-                try:
-                    return res.json()
-                except json.JSONDecodeError:
-                    return True
-
+            try:
+                resp = await res.json()
+            except json.JSONDecodeError:
+                resp = json.loads(await res.text)
+        if resp.get("error").get("kind") is not None:
+            if resp["error"]["code"] == "RATE_LIMIT_EXCEEDED":
+                raise RateLimitError("We are being rate limited. Please try again in a few moments.")
+            raise ClientException(
+                resp["error"]["message"]
+                + "\nid: "
+                + resp["error"]["id"]
+            )
+        elif resp.get("error").get("kind") is not None:
+            raise HTTPException(
+                resp["code"]
+                + "\nid: "
+                + resp["statusCode"]
+            )
+        else:
+            print(type(resp))
+            return resp
 
 async def request_guest(
     address, endpoint, jobj: dict, header: dict = {"Content-Type": "application/json"}
