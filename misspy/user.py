@@ -3,15 +3,16 @@ from attrdictionary import AttrDict
 from .util import nonecheck
 from .http import request, request_sync
 
+
 class i:
     
     def __init__(self, address, i, ssl=True) -> None:
         self.i = i
         self.address = address
         self.ssl = ssl
-
+        
     async def get(self):
-        r = await request(self.address, self.__i, "i", {})
+        r = await request(self.address, self.i, "i", {})
         return AttrDict(r)
 
     async def favorites(self, limit=10, sinceId=None, untilId=None):
@@ -20,7 +21,7 @@ class i:
             base["sinceId"] = sinceId
         if nonecheck(untilId):
             base["untilId"] = untilId
-        return AttrDict(await request(self.address, self.__i, "i/favorites", base))
+        return AttrDict(await request(self.address, self.i, "i/favorites", base))
 
     async def gallery_likes(self, limit=10, sinceId=None, untilId=None):
         base = {"limit": limit}
@@ -28,7 +29,7 @@ class i:
             base["sinceId"] = sinceId
         if nonecheck(untilId):
             base["untilId"] = untilId
-        return AttrDict(await request(self.address, self.__i, "i/gallery/likes", base))
+        return AttrDict(await request(self.address, self.i, "i/gallery/likes", base))
 
     async def gallery_posts(self, limit=10, sinceId=None, untilId=None):
         base = {"limit": limit}
@@ -36,13 +37,13 @@ class i:
             base["sinceId"] = sinceId
         if nonecheck(untilId):
             base["untilId"] = untilId
-        return AttrDict(await request(self.address, self.__i, "i/gallery/posts", base))
+        return AttrDict(await request(self.address, self.i, "i/gallery/posts", base))
 
     async def get_word_muted_notes_count(
         self
     ):
         return AttrDict(
-            await request(self.address, self.__i, "i/get-word-muted-notes-count", {})
+            await request(self.address, self.i, "i/get-word-muted-notes-count", {})
         )
 
     async def notifications(
@@ -70,7 +71,7 @@ class i:
             base["includeTypes"] = includeTypes
         if nonecheck(excludeTypes):
             base["excludeTypes"] = excludeTypes
-        return AttrDict(await request(self.address, self.__i, "i/notifications", base))
+        return AttrDict(await request(self.address, self.i, "i/notifications", base))
 
     async def page_likes(self, limit=10, sinceId=None, untilId=None):
         base = {"limit": limit}
@@ -78,7 +79,7 @@ class i:
             base["sinceId"] = sinceId
         if nonecheck(untilId):
             base["untilId"] = untilId
-        return AttrDict(await request(self.address, self.__i, "i/page-likes", base))
+        return AttrDict(await request(self.address, self.i, "i/page-likes", base))
 
     async def pages(self, limit=10, sinceId=None, untilId=None):
         base = {"limit": limit}
@@ -86,36 +87,34 @@ class i:
             base["sinceId"] = sinceId
         if nonecheck(untilId):
             base["untilId"] = untilId
-        return AttrDict(await request(self.address, self.__i, "i/pages", base))
+        return AttrDict(await request(self.address, self.i, "i/pages", base))
     
     async def pin(self, noteId):
         return AttrDict(
-            await request(self.address, self.__i, "i/pin", {"noteId": noteId})
+            await request(self.address, self.i, "i/pin", {"noteId": noteId})
         )
 
     async def unpin(self, noteId):
         return AttrDict(
-            await request(self.address, self.__i, "i/unpin", {"noteId": noteId})
+            await request(self.address, self.i, "i/unpin", {"noteId": noteId})
         )
 
     async def update(self, params):
-        return AttrDict(await request(self.address, self.__i, "i/update", params))
+        return AttrDict(await request(self.address, self.i, "i/update", params))
 
     async def read_all_messaging_messages(self):
         return AttrDict(
-            await request(self.address, self.__i, "i/read-all-messaging-messages", {})
+            await request(self.address, self.i, "i/read-all-messaging-messages", {})
         )
 
     async def read_all_unread_notes(self):
         return AttrDict(
-            await request(self.address, self.__i, "i/read-all-unread-notes", {})
+            await request(self.address, self.i, "i/read-all-unread-notes", {})
         )
 
     async def read_announcement(self, announcementId):
         return AttrDict(
-            await request(
-                self.address,
-                self.__i,
+            await request(self.address, self.i, 
                 "i/read-all-unread-notes",
                 {"announcementId": announcementId},
             )
@@ -124,18 +123,18 @@ class i:
     
 class blocking:
     
-    def __init__(self, address, i) -> None:
+    def __init__(self, address, i, ssl=True) -> None:
         self.i = i
         self.address = address
 
     async def create(self, userId: str):
         params = {"userId": userId}
-        r = await request(self.address, self.__i, "blocking/create", params)
+        r = await request(self.address, self.i, "blocking/create", params)
         return AttrDict(r)
 
     async def delete(self, userId: str):
         params = {"userId": userId}
-        r = await request(self.address, self.__i, "blocking/delete", params)
+        r = await request(self.address, self.i, "blocking/delete", params)
         return AttrDict(r)
 
     async def list(
@@ -148,12 +147,12 @@ class blocking:
             params["sinceId"] = sinceId
         if not untilId is None:
             params["untilId"] = untilId
-        r = await request(self.address, self.__i, "blocking/list", params)
+        r = await request(self.address, self.i, "blocking/list", params)
         return AttrDict(r)
 
 class antennas:
     
-    def __init__(self, address, i) -> None:
+    def __init__(self, address, i, ssl=True) -> None:
         self.i = i
         self.address = address
         
@@ -183,7 +182,7 @@ class antennas:
         }
         if nonecheck(userListId):
             base["userListId"] = userListId
-        return AttrDict(request(self.address, self.__i, "antennas/create", base))
+        return AttrDict(request("antennas/create", base))
 
     async def update(
         self,
@@ -211,20 +210,20 @@ class antennas:
         }
         if nonecheck(userListId):
             base["userListId"] = userListId
-        return AttrDict(request(self.address, self.__i, "antennas/update", base))
+        return AttrDict(request("antennas/update", base))
 
     async def delete(self, antennaId):
         return AttrDict(
-            request(self.address, self.__i, "antennas/delete", {"antennaId": antennaId})
+            request("antennas/delete", {"antennaId": antennaId})
         )
 
     async def show(self, antennaId):
         return AttrDict(
-            request(self.address, self.__i, "antennas/show", {"antennaId": antennaId})
+            request("antennas/show", {"antennaId": antennaId})
         )
 
     async def list(self):
-        return AttrDict(request(self.address, self.__i, "antennas/list", {}))
+        return AttrDict(request("antennas/list", {}))
 
     async def notes(
         self,
@@ -244,20 +243,18 @@ class antennas:
             base["sinceDate"] = sinceDate
         if nonecheck(untilDate):
             base["untilDate"] = untilDate
-        return AttrDict(await request(self.address, self.__i, "federation/users", base))
+        return AttrDict(await request(self.address, self.i, "federation/users", base))
 
 
 class mute:
     
-    def __init__(self, address, i) -> None:
+    def __init__(self, address, i, ssl=True) -> None:
         self.i = i
         self.address = address
 
     async def create(self, userId, expiresAt=None):
         return AttrDict(
-            await request(
-                self.address,
-                self.__i,
+            await request(self.address, self.i, 
                 "mute/create",
                 {"userId": userId, "expiresAt": expiresAt},
             )
@@ -269,16 +266,16 @@ class mute:
             base["sinceId"] = sinceId
         if nonecheck(untilId):
             base["untilId"] = untilId
-        return AttrDict(await request(self.address, self.__i, "mute/list", base))
+        return AttrDict(await request(self.address, self.i, "mute/list", base))
 
     async def delete(self, userId):
         return AttrDict(
-            await request(self.address, self.__i, "mute/delete", {"userId": userId})
+            await request(self.address, self.i, "mute/delete", {"userId": userId})
         )
 
 class users:
     
-    def __init__(self, address, i) -> None:
+    def __init__(self, address, i, ssl=True) -> None:
         self.i = i
         self.address = address
         
@@ -294,7 +291,7 @@ class users:
         }
         if nonecheck(sort):
             base["sort"] = sort
-        return AttrDict(request(self.address, self.__i, "users", base))
+        return AttrDict(request("users", base))
 
     async def users_clips(self, userId, limit=10, sinceId=None, untilId=None):
         base = {"userId": userId, "limit": limit}
@@ -302,7 +299,7 @@ class users:
             base["sinceId"] = sinceId
         if nonecheck(untilId):
             base["untilId"] = untilId
-        return AttrDict(await request(self.address, self.__i, "users/clips", base))
+        return AttrDict(await request(self.address, self.i, "users/clips", base))
 
     async def users_followers(self, limit=10, sinceId=None, untilId=None):
         base = {"limit": limit}
@@ -310,7 +307,7 @@ class users:
             base["sinceId"] = sinceId
         if nonecheck(untilId):
             base["untilId"] = untilId
-        return AttrDict(await request(self.address, self.__i, "users/followers", base))
+        return AttrDict(await request(self.address, self.i, "users/followers", base))
 
     async def users_following(self, limit=10, sinceId=None, untilId=None):
         base = {"limit": limit}
@@ -318,7 +315,7 @@ class users:
             base["sinceId"] = sinceId
         if nonecheck(untilId):
             base["untilId"] = untilId
-        return AttrDict(await request(self.address, self.__i, "users/following", base))
+        return AttrDict(await request(self.address, self.i, "users/following", base))
 
     async def users_gallery_posts(self, userId, limit=10, sinceId=None, untilId=None):
         base = {"userId": userId, "limit": limit}
@@ -327,7 +324,7 @@ class users:
         if nonecheck(untilId):
             base["untilId"] = untilId
         return AttrDict(
-            await request(self.address, self.__i, "users/gallery/posts", base)
+            await request(self.address, self.i, "users/gallery/posts", base)
         )
 
     async def users_pages(self, userId, limit=10, sinceId=None, untilId=None):
@@ -336,7 +333,7 @@ class users:
             base["sinceId"] = sinceId
         if nonecheck(untilId):
             base["untilId"] = untilId
-        return AttrDict(await request(self.address, self.__i, "users/pages", base))
+        return AttrDict(await request(self.address, self.i, "users/pages", base))
 
     async def users_reactions(
         self,
@@ -356,7 +353,7 @@ class users:
             base["sinceDate"] = sinceDate
         if nonecheck(untilDate):
             base["untilDate"] = untilDate
-        return AttrDict(await request(self.address, self.__i, "users/reactions", base))
+        return AttrDict(await request(self.address, self.i, "users/reactions", base))
 
     async def users_recommendation(
         self,
@@ -365,19 +362,17 @@ class users:
     ):
         base = {"limit": limit, "offset": offset}
         return AttrDict(
-            await request(self.address, self.__i, "users/recommendation", base)
+            await request(self.address, self.i, "users/recommendation", base)
         )
 
     async def users_relation(self, userId):
         return AttrDict(
-            await request(self.address, self.__i, "users/relation", {"userId": userId})
+            await request(self.address, self.i, "users/relation", {"userId": userId})
         )
 
     async def users_report_abuse(self, userId, comment):
         return AttrDict(
-            await request(
-                self.address,
-                self.__i,
+            await request(self.address, self.i, 
                 "users/report-abuse",
                 {"userId": userId, "comment": comment},
             )
@@ -387,9 +382,7 @@ class users:
         self, username=None, host=None, limit=10, detail=True
     ):
         return AttrDict(
-            await request(
-                self.address,
-                self.__i,
+            await request(self.address, self.i, 
                 "users/search-by-username-and-host",
                 {"username": username, "host": host, "limit": limit, "detail": detail},
             )
@@ -399,9 +392,7 @@ class users:
         self, query, offset=0, limit=10, origin="combined", detail=True
     ):
         return AttrDict(
-            await request(
-                self.address,
-                self.__i,
+            await request(self.address, self.i, 
                 "users/search",
                 {
                     "query": query,
@@ -415,13 +406,13 @@ class users:
 
     def users_show(self, username, host=None):
         d = request_sync(
-            self.address, self.__i, "users/show", {"username": username, "host": None}
+            "users/show", {"username": username, "host": None}
         )
         return AttrDict(d)
 
     async def users_stats(self, userId):
         return AttrDict(
-            await request(self.address, self.__i, "users/stats", {"userId": userId})
+            await request(self.address, self.i, "users/stats", {"userId": userId})
         )
 
     async def users_get_frequently_replied_users(
@@ -431,8 +422,8 @@ class users:
     ):
         base = {"userId": userId, "limit": limit}
         return AttrDict(
-            await request(
-                self.address, self.__i, "users/get-frequently-replied-users", base
+            await request(self.address, self.i, 
+                "users/get-frequently-replied-users", base
             )
         )
 
@@ -470,57 +461,57 @@ class users:
             base["sinceId"] = sinceId
         if nonecheck(untilId):
             base["untilId"] = untilId
-        return AttrDict(await request(self.address, self.__i, "users/notes", base))
+        return AttrDict(await request(self.address, self.i, "users/notes", base))
     
 class following:
     
-    def __init__(self, address, i) -> None:
+    def __init__(self, address, i, ssl=True) -> None:
         self.i = i
         self.address = address
     
     async def create(self, userId):
         return AttrDict(
-            await request(
-                self.address, self.__i, "following/create", {"userId": userId}
+            await request(self.address, self.i, 
+                "following/create", {"userId": userId}
             )
         )
 
     async def delete(self, userId):
         return AttrDict(
-            await request(
-                self.address, self.__i, "following/delete", {"userId": userId}
+            await request(self.address, self.i, 
+                "following/delete", {"userId": userId}
             )
         )
 
     async def invalidate(self, userId):
         return AttrDict(
-            await request(
-                self.address, self.__i, "following/invalidate", {"userId": userId}
+            await request(self.address, self.i, 
+                "following/invalidate", {"userId": userId}
             )
         )
 
     async def requests_accept(self, userId):
         return AttrDict(
-            await request(
-                self.address, self.__i, "following/requests/accept", {"userId": userId}
+            await request(self.address, self.i, 
+                "following/requests/accept", {"userId": userId}
             )
         )
 
     async def requests_cancel(self, userId):
         return AttrDict(
-            await request(
-                self.address, self.__i, "following/requests/cancel", {"userId": userId}
+            await request(self.address, self.i, 
+                "following/requests/cancel", {"userId": userId}
             )
         )
 
     async def requests_list(self):
         return AttrDict(
-            await request(self.address, self.__i, "following/requests/list", {})
+            await request(self.address, self.i, "following/requests/list", {})
         )
 
     async def requests_reject(self, userId):
         return AttrDict(
-            await request(
-                self.address, self.__i, "following/requests/reject", {"userId": userId}
+            await request(self.address, self.i, 
+                "following/requests/reject", {"userId": userId}
             )
         )
