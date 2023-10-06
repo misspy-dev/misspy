@@ -30,7 +30,7 @@ class notes:
         sinceId: str = None,
         untilId: str = None,
     ):
-        base = {"i": i, "local": local, "limit": limit}
+        base = {"local": local, "limit": limit}
         if nonecheck(reply):
             base["reply"] = reply
         if nonecheck(renote):
