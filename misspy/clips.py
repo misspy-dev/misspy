@@ -3,14 +3,14 @@ from attrdictionary import AttrDict
 
 from .http import request
 
-class server:
+class clips:
 
     def __init__(self, address, i, ssl=True) -> None:
         self.i = i
         self.address = address
         self.ssl = ssl
 
-    async def clips_create(self, name, isPublic=False, description=None):
+    async def create(self, name, isPublic=False, description=None):
         return AttrDict(
             await request(
                 self.address,
@@ -20,7 +20,7 @@ class server:
             )
         )
 
-    async def clips_update(self, clipId, name, isPublic=False, description=None):
+    async def update(self, clipId, name, isPublic=False, description=None):
         return AttrDict(
             await request(
                 self.address,
@@ -35,15 +35,15 @@ class server:
             )
         )
 
-    async def clips_delete(self, clipId):
+    async def delete(self, clipId):
         return AttrDict(
             await request(self.address, self.__i, "clips/delete", {"clipId": clipId})
         )
 
-    async def clips_list(self):
+    async def list(self):
         return AttrDict(await request(self.address, self.__i, "clips/list", {}))
 
-    async def clips_show(self, clipId):
+    async def show(self, clipId):
         return AttrDict(
             await request(self.address, self.__i, "clips/show", {"clipId": clipId})
         )
