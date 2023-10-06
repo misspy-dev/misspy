@@ -98,12 +98,6 @@ async def request(
                 + "\nid: "
                 + resp["error"]["id"]
             )
-        elif resp.get("error").get("kind") is not None:
-            raise HTTPException(
-                resp["code"]
-                + "\nid: "
-                + resp["statusCode"]
-            )
         else:
             print(type(resp))
             return resp
