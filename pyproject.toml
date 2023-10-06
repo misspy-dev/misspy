@@ -37,7 +37,6 @@ Changelog = "https://python-poetry.org/history/"
 [tool.poetry.dependencies]
 python = "^3.8"
 
-websockets = "^11.0.3"
 attrdictionary = "^1.0.0"
 aiodns = "^3.0.0"
 aiohttp = "^3.8.5"
