@@ -69,7 +69,5 @@ print(token)
 
 
 # docs
-Document is Multi-Language supported. (English, 日本語)
-
 Documentation can be found at:
-https://misspy.sonyakun.com/docs
+https://docs.misspy.xyz/
