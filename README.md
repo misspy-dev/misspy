@@ -1,9 +1,8 @@
 # misspy
-![Supported Python Version](https://img.shields.io/pypi/pyversions/misspy) [![PyPI Downloads](https://img.shields.io/pypi/dm/misspy.svg)](https://badge.fury.io/py/misspy) [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black) [![Poetry](https://img.shields.io/endpoint?url=https://python-poetry.org/badge/v0.json)](https://python-poetry.org/) [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=misspy-development_misspy&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=misspy-development_misspy)
+![Supported Python Version](https://img.shields.io/pypi/pyversions/misspy) [![PyPI version](https://badge.fury.io/py/misspy.svg)](https://badge.fury.io/py/misspy) [![PyPI Downloads](https://img.shields.io/pypi/dm/misspy.svg)](https://badge.fury.io/py/misspy) [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black) [![Poetry](https://img.shields.io/endpoint?url=https://python-poetry.org/badge/v0.json)](https://python-poetry.org/) [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=sonyakun_misspy&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=sonyakun_misspy) [![Upload Python Package](https://github.com/sonyakun/misspy/actions/workflows/main.yml/badge.svg)](https://github.com/sonyakun/misspy/actions/workflows/main.yml)
 
-misspy is a High-performance Misskey API wrapper built with Python.
+Misskey API library for Python with StreamingAPI support.
 
-that implements almost all Misskey APIs point except admin.
 # supported software
 Misskey forks not listed below are supported only in the latest version **__provided they are API compatible__**.
 * [misskey](https://github.com/misskey-dev/misskey)
@@ -17,9 +16,6 @@ This library is developed based on the API specification for Misskey v13 or late
 
 # example
 **Other examples can be found in the examples directory.**
-
-> This is the implementation as of 2023.9.14.
-Note that the syntax is different in 2023.10.dev0 and later versions.
 
 ## send note
 ```python

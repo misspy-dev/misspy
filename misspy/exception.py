@@ -19,8 +19,6 @@ class WebsocketError(MisskeyException):
 class ClientException(MisskeyException):
     """Parent class of error classes such as login failure."""
 
-class RateLimitError(ClientException):
-    """RateLimitError trigger: RATE_LIMIT_EXCEEDED"""
 
 class AuthenticationFailed(ClientException):
     """Class called if MisskeyAPI authentication fails."""

@@ -8,7 +8,4 @@ from . import util
 from . import exception
 from .hook import hook
 
-try:
-    __version__ = pkg_resources.get_distribution("misspy").version
-except pkg_resources.DistributionNotFound:
-    __version__ = "0.0.0.ldev"
+__version__ = pkg_resources.get_distribution("misspy").version
