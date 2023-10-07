@@ -1,0 +1,3 @@
+[submodule "misspy/core"]
+	path = misspy/core
+	url = https://github.com/misspy-development/core
