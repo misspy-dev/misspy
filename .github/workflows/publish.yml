@@ -1,4 +1,4 @@
-name: Upload Python Package
+name: Pulblish to PyPI and Upload Artifact to GitHub
 
 on:
  release: 
