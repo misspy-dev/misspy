@@ -1,4 +1,4 @@
-name: Pulblish to PyPI and Upload Artifact to GitHub
+name: Pulblish to PyPI
 
 on:
  release: 
@@ -72,3 +72,4 @@ jobs:
           asset_path: ${{ env.ARTIFACT2_PATHNAME }}
           asset_name: ${{ env.ARTIFACT2_NAME }}
           asset_content_type: application/x-wheel+zip
+          
