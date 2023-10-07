@@ -4,6 +4,10 @@ on:
  release: 
    types: [prereleased, released]
  workflow_dispatch:
+    inputs:
+      version:
+        description: 'version'
+        required: true
 
 jobs:
   release:
@@ -11,7 +15,14 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: "Set env"
-        run: echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
+        run: |
+         echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
+         if [ $RELEASE_VERSION = "develop" ]; then
+           echo "RELEASE_VERSION=${{ github.event.inputs.version }}" >> $GITHUB_ENV
+         elif [ $RELEASE_VERSION = "master" ]; then
+           echo "RELEASE_VERSION=${{ github.event.inputs.version }}" >> $GITHUB_ENV
+         fi
+
       - name: Test
         run: |
           echo $RELEASE_VERSION
