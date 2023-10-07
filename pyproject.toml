@@ -5,12 +5,33 @@ description = "High-performance Misskey API framework"
 authors = ["sonyakun <contact@sonyakun.xyz>"]
 packages = [{include = "misspy"}]
 readme = "README.md"
-documentation = "https://misspy.sonyakun.com/docs/en"
-repository = "https://github.com/sonyakun/misspy"
+homepage = "https://misspy.xyz/"
+documentation = "https://docs.misspy.xyz/"
+repository = "https://github.com/misspy-development/misspy"
+keywords = [
+    "misskey", 
+    "misskey-api",
+    "misskey-bot"
+]
+classifiers = [
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3 :: Only",
+    "License :: OSI Approved :: MIT License",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
 
 [tool.poe.tasks]
 build = "poetry build"
 publish = "poetry publish"
+
+[tool.poetry.urls]
+Changelog = "https://misspy.xyz/History/"
 
 [tool.poetry.dependencies]
 python = "^3.8"
