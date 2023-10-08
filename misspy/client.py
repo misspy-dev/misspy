@@ -27,14 +27,16 @@ class Bot:
     def __init__(self, address, token=None, ssl=True) -> None:
         self.ssl = ssl
 
-        if not address.startswith("http://") and not address.startswith("https://"):
-            self.address = "http://" + address
+        http = "http://"
+        https = "https://"
+        if not address.startswith(http) and not address.startswith(https):
+            self.address = http + address
             if ssl:
-                self.address = "https://" + address
+                self.address = https + address
             self.address_raw = address
         else:
             self.address = address
-            self.address_raw = address.replace("https://", "").replace("http://", "")
+            self.address_raw = address.replace(https, "").replace(http, "")
         self.__i = token
         self.ws = MiWS(self.address_raw, self.__i, self.ssl)
         self.reactions = reactions(self.address, self.__i, self.ssl)
@@ -50,7 +52,7 @@ class Bot:
         self.channels = channels(self.address, self.__i, self.ssl)
         self.clips = clips(self.address, self.__i, self.ssl)
         self.i = i(self.address, self.__i, self.ssl)
-        self.bot = self.server.user()
+        self.mi = self.server.user()
 
     def run(self):
         asyncio.run(self.ws.ws_handler())
