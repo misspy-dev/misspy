@@ -3,7 +3,7 @@ from attrdictionary import AttrDict
 
 import uuid
 
-from .. import exception
+from ..core import exception
 
 
 class MiAuth:

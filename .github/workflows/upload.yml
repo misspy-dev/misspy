@@ -1,0 +1,86 @@
+name: Pulblish to PyPI
+
+on:
+ release: 
+   types: [prereleased, released]
+ workflow_dispatch:
+    inputs:
+      version:
+        description: 'version'
+        required: true
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: "Set env"
+        run: |
+         
+         if [ -n "${{ github.event.inputs.version }}" ]; then
+           echo "RELEASE_VERSION=${{ github.event.inputs.version }}" >> $GITHUB_ENV
+         else
+           echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
+         fi
+
+      - name: echo version
+        run: |
+          echo $RELEASE_VERSION
+          echo ${{ env.RELEASE_VERSION }}
+      - name: Set up Python
+        uses: actions/setup-python@v3
+        with:
+          python-version: '3.x'
+      - name: Install Poetry
+        run: |
+          python -m pip install --upgrade pip
+          pip install poetry 
+      - name: Add Poetry Plugin
+        # poetry plugin add poetry-version-plugin
+        run: |
+          pip install poetry-version-plugin
+      - name: PyPI Settings
+        run: |
+          poetry config pypi-token.pypi ${{secrets.PYPI_TOKEN}}
+
+      - name: Build Poetry
+        run: |
+          git tag ${{ env.RELEASE_VERSION }}
+          poetry build
+          poetry publish
+      - name: Gets latest created release info
+        id: latest_release_info
+        uses: jossef/action-latest-release-info@v1.2.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.USER_TOKEN }}
+      - name: Get Name of Artifact
+        run: |
+          ARTIFACT_PATHNAME=$(ls dist/*.whl | head -n 1)
+          ARTIFACT_NAME=$(basename $ARTIFACT_PATHNAME)
+          echo "ARTIFACT_PATHNAME=${ARTIFACT_PATHNAME}" >> $GITHUB_ENV
+          echo "ARTIFACT_NAME=${ARTIFACT_NAME}" >> $GITHUB_ENV
+          ARTIFACT2_PATHNAME=$(ls dist/*.tar.gz | head -n 1)
+          ARTIFACT2_NAME=$(basename $ARTIFACT2_PATHNAME)
+          echo "ARTIFACT2_PATHNAME=${ARTIFACT2_PATHNAME}" >> $GITHUB_ENV
+          echo "ARTIFACT2_NAME=${ARTIFACT2_NAME}" >> $GITHUB_ENV
+      - name: Upload Whl to Release Assets
+        id: upload-release-asset
+        uses: actions/upload-release-asset@v1.0.2
+        env:
+          GITHUB_TOKEN: ${{ secrets.USER_TOKEN }}
+        with:
+          upload_url: ${{ steps.latest_release_info.outputs.upload_url }}
+          asset_path: ${{ env.ARTIFACT_PATHNAME }}
+          asset_name: ${{ env.ARTIFACT_NAME }}
+          asset_content_type: application/x-wheel+zip
+      - name: Upload Whl to Release Assets2
+        id: upload-release-asset2
+        uses: actions/upload-release-asset@v1.0.2
+        env:
+          GITHUB_TOKEN: ${{ secrets.USER_TOKEN }}
+        with:
+          upload_url: ${{ steps.latest_release_info.outputs.upload_url }}
+          asset_path: ${{ env.ARTIFACT2_PATHNAME }}
+          asset_name: ${{ env.ARTIFACT2_NAME }}
+          asset_content_type: application/x-wheel+zip
+          

@@ -1,9 +1,7 @@
 class hook:
-    
     functions = {}
 
     def add(event, func):
-        
         """add
 
         Args:

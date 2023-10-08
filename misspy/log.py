@@ -21,13 +21,15 @@ class ColoredStreamHandler(logging.StreamHandler):
             self.stream.write("\033[0m")
 
 
+class log:
+    if enablelog:
+        logger = logging.getLogger()
+        logger.setLevel(logging.INFO)
+        dt = datetime.datetime.now()
+        formatter = logging.Formatter(
+            "[{}] %(levelname)s %(message)s".format(dt.strftime("%H:%M:%S"))
+        )
+        handler = ColoredStreamHandler(sys.stdout)
+        handler.setFormatter(formatter)
 
-logger = logging.getLogger()
-logger.setLevel(logging.DEBUG)
-dt = datetime.datetime.now()
-formatter = logging.Formatter(
-    "[{}] %(levelname)s %(message)s".format(dt.strftime("%H:%M:%S"))
-)
-handler = ColoredStreamHandler(sys.stdout)
-handler.setFormatter(formatter)
-logger.addHandler(handler)
+        logger.addHandler(handler)

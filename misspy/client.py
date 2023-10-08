@@ -36,7 +36,6 @@ class Bot:
             self.address = address
             self.address_raw = address.replace("https://", "").replace("http://", "")
         self.__i = token
-        print(self.address)
         self.ws = MiWS(self.address_raw, self.__i, self.ssl)
         self.reactions = reactions(self.address, self.__i, self.ssl)
         self.notes = notes(self.address, self.__i, self.ssl)
