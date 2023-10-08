@@ -1,5 +1,7 @@
 # misspy
-![Supported Python Version](https://img.shields.io/pypi/pyversions/misspy) [![PyPI version](https://badge.fury.io/py/misspy.svg)](https://badge.fury.io/py/misspy) [![PyPI Downloads](https://img.shields.io/pypi/dm/misspy.svg)](https://badge.fury.io/py/misspy) [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black) [![Poetry](https://img.shields.io/endpoint?url=https://python-poetry.org/badge/v0.json)](https://python-poetry.org/) [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=sonyakun_misspy&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=sonyakun_misspy) [![Pulblish to PyPI and Upload Artifact to GitHub](https://github.com/misspy-development/misspy/actions/workflows/publish.yml/badge.svg?branch=master)](https://github.com/misspy-development/misspy/actions/workflows/publish.yml)
+![Supported Python Version](https://img.shields.io/pypi/pyversions/misspy?style=flat-square) [![PyPI version](https://badge.fury.io/py/misspy.svg?style=flat-square)](https://badge.fury.io/py/misspy) [![PyPI Downloads](https://img.shields.io/pypi/dm/misspy.svg?style=flat-square)](https://badge.fury.io/py/misspy) 
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg?style=flat-square)](https://github.com/psf/black) 
+[![Misskey-API](https://img.shields.io/badge/Misskey-555555.svg?logo=Misskey&style=flat-square)](https://misskey-hub.net)
 
 Misskey API library for Python with StreamingAPI support.
 
