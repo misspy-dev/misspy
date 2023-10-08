@@ -2,7 +2,7 @@
 from attrdictionary import AttrDict
 
 from .util import nonecheck
-from .http import request
+from .core.http import request
 
 class pages:
 

@@ -1,4 +1,5 @@
-from .http import request
+from typing import Any
+from .core.http import request
 
 
 async def create(address, i, noteId, reaction):

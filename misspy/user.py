@@ -1,7 +1,7 @@
 from attrdictionary import AttrDict
 
 from .util import nonecheck
-from .http import request, request_sync
+from .core.http import request, request_sync
 
 
 class i:

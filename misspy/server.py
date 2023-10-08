@@ -1,6 +1,6 @@
 from attrdictionary import AttrDict
 
-from .http import request, request_sync
+from .core.http import request, request_sync
 
 
 class server:
