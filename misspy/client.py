@@ -10,14 +10,14 @@ from .drive import drive
 from .federation import federation
 
 from .pages import pages
-from .http import request
+from .core.http import request
 from .MiWeb import MiWeb
 from .hashtags import hashtags
 from .reaction import reactions
 from .notes import notes
 from .server import server
 from .user import i, users, following
-from .ws import MiWS
+from .core.ws import MiWS
 
 class Bot:
     """

@@ -1,6 +1,6 @@
 from attrdictionary import AttrDict
 
-from .http import request
+from .core.http import request
 
 class hashtags:
 

@@ -1,5 +1,5 @@
 from .util import nonecheck
-from .http import request
+from .core.http import request
 from .types import User, Note
 
 
