@@ -11,11 +11,6 @@ Misskey forks not listed below are supported only in the latest version **__prov
 * [misskey (misskey.io)](https://github.com/misskeyIO/misskey)
 * [firefish (calckey)](https://codeberg.org/firefish/firefish) (Some APIs may not be compatible with some APIs due to missing documentation regarding firefish API specifications.)
 
-
-## supported misskey versions
-This library is developed based on the API specification for Misskey v13 or later, so v12 and earlier are not supported (but you may still be able to use this library).
-
-
 # example
 **Other examples can be found in the examples directory.**
 
@@ -65,7 +60,17 @@ while True:
 print(token)
 ```
 
+# Other
 
-# docs
+## docs
 Documentation can be found at:
 https://docs.misspy.xyz/
+
+## supported python version
+|                          | below 3.7 | 3.8 ~ 3.11          | 3.12             | 
+| ------------------------ | --------- | ------------------- | ---------------- | 
+| supported                | ❌        | ⭕                  | ❌ (Beta)        | 
+| supported misspy version | ❌        | 2023.8.24rc1~latest | 2023.11.0-beta.1 | 
+
+## supported misskey versions
+This library is developed based on the API specification for Misskey v13 or later, so v12 and earlier are not supported (but you may still be able to use this library).
