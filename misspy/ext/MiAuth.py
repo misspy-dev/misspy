@@ -7,6 +7,8 @@ from ..core import exception
 
 
 class MiAuth:
+    """MiAuth extension.
+    """
     def __init__(self, address) -> None:
         if not address.startswith("http://") and not address.startswith("https://"):
             self._address: str = "https://" + address
@@ -46,6 +48,17 @@ class MiAuth:
             "read:gallery-likes",
         ],
     ):
+        """generate MiAuth URL.
+
+        Args:
+            name (str): Application name.
+            icon (str, optional): Application icon url. Defaults to None.
+            callback (_type_, optional): Application callback url. Defaults to None.
+            permission (_type_, optional): Application Permission.
+
+        Returns:
+            str: MiAuth url.
+        """
         self.session_id = uuid.uuid4()
         if callback is not None:
             callback = f"&callback={callback}"
@@ -60,6 +73,14 @@ class MiAuth:
         return url
 
     def check(self):
+        """If authenticated, AttrDict is returned.
+
+        Raises:
+            exception.MiAuthFailed: If not authenticated.
+
+        Returns:
+            AttrDict: MiAuth result.
+        """
         res = httpx.post(f"{self._address}/api/miauth/{self.session_id}/check").json()
         if res.get("token") is not None:
             return AttrDict(res)
