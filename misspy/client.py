@@ -56,7 +56,7 @@ class Bot:
         self.mi = self.server.user()
 
     def run(self):
-        asyncio.run(self.ws.ws_handler())
+        asyncio.run(self.ws.ws_handler(notes_nyaize=self.nyaize))
 
 
     async def connect(self, channel):
