@@ -42,11 +42,18 @@ requests = "^2.31.0"
 httpx = "^0.25.0"
 aiohttp = "^3.8.6"
 aiodns = "^3.1.1"
+mkdocs = { version = "*", optional = true }
+mkdocs-material = { version = "*", optional = true }
+mkdocs-awesome-pages-plugin = { version = "*", optional = true }
+mkdocstrings = { version = "*", optional = true }
+mkdocstrings-python = { version = "*", optional = true }
+mkdocs-git-revision-date-localized-plugin = { version = "*", optional= true}
 
 [tool.poetry-version-plugin]
 source = "git-tag"
 
 [tool.poetry.extras]
+mkdocs = ["mkdocs", "mkdocs-material", "mkdocs-awesome-pages-plugin", "mkdocstrings", "mkdocstrings-python", "mkdocs-git-revision-date-localized-plugin"]
 speedups = ["charset-normalizer"]
 dev = ["poethepoet", "black"]
 
