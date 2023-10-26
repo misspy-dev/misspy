@@ -1,8 +1,8 @@
 # dev dir
 dev_bot/
 
-# Poety
-poetry.lock
+# * lock
+*.lock
 
 # VSCode
 .vscode/
