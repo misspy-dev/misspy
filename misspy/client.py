@@ -25,7 +25,7 @@ class Bot:
     """
 
     def __init__(self, address, token=None, ssl=True) -> None:
-        self.nyaize = True
+        self.nyaize = False #Unstable
         self.ssl = ssl
 
         http = "http://"
