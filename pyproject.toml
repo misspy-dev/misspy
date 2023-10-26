@@ -37,7 +37,7 @@ Changelog = "https://misspy.xyz/History/"
 python = "^3.8"
 websockets = "^11.0.3"
 attrdictionary = "^1.0.0"
-misspy-fast-core = { version = "^1.0.0", optional = true }
+misspy-core-fast = { version = "^1.0.0", optional = true }
 poethepoet = { version = ">=0.22.1,<0.25.0", optional = true }
 requests = "^2.31.0"
 httpx = "^0.25.0"
@@ -46,7 +46,7 @@ httpx = "^0.25.0"
 source = "git-tag"
 
 [tool.poetry.extras]
-speedups = ["misspy-fast-core"]
+speedups = ["misspy-core-fast"]
 dev = ["poethepoet", "black"]
 
 [build-system]
