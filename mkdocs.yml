@@ -1,5 +1,6 @@
 site_name: misspy
 copyright: "&copy; 2023 misspy-development"
+docs_dir: "../docs
 
 repo_url: https://github.com/misspy-development/misspy
 repo_name: misspy-development/misspy
