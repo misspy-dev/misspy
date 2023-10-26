@@ -1,0 +1,6 @@
+mkdocs
+mkdocs-material
+mkdocs-awesome-pages-plugin
+mkdocstrings
+mkdocstrings-python
+mkdocs-git-revision-date-localized-plugin = { version
