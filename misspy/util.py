@@ -12,3 +12,5 @@ def nonecheck(arg):
         return False
     else:
         return True
+
+def nyaize(text: str): return text.replace("な", "にゃ").replace("ナ", "ニャ").replace("na", "nya").replace("NA", "NYA")
