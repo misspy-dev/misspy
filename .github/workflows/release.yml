@@ -2,7 +2,7 @@ name: Create release tag and release note.
 
 on:
   push:
-    branches: [ release ]
+    branches: [ master ]
 
 jobs:
   create-release-tag:
@@ -26,8 +26,8 @@ jobs:
         id: release_tag
         run: |
           today=$(date +'%Y.%m.%d')
-          pre_release_date=$(echo ${{ steps.pre_tag.outputs.pre_tag }} | awk -F'-' '{print $1}')
-          pre_release_count=$(echo ${{ steps.pre_tag.outputs.pre_tag }} | awk -F'-' '{print $2}')
+          pre_release_date=$(echo ${{ steps.pre_tag.outputs.pre_tag }} | awk -F'.' '{print $1}')
+          pre_release_count=$(echo ${{ steps.pre_tag.outputs.pre_tag }} | awk -F'.' '{print $2}')
           if [[ ! $pre_release_date = $today ]]; then
             echo "init count"
             pre_release_count=0
