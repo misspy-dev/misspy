@@ -2,7 +2,7 @@ from attrdictionary import AttrDict
 
 from .util import nonecheck
 from .core.http import request, request_sync
-
+from .types import MyProfile
 
 class i:
     
@@ -99,7 +99,18 @@ class i:
             await request(self.address, self.i, "i/unpin", {"noteId": noteId})
         )
 
-    async def update(self, params):
+    async def update(
+        self, 
+        params #: MyProfile
+    ):
+        """update profile.
+
+        Args:
+            params (Dict): Profile json object.
+
+        Returns:
+            _type_: _description_
+        """
         return AttrDict(await request(self.address, self.i, "i/update", params))
 
     async def read_all_messaging_messages(self):
@@ -119,7 +130,31 @@ class i:
                 {"announcementId": announcementId},
             )
         )
-    
+
+    def get_avatar_decorations(self): 
+        """Get a list of available avatar decorations.
+
+        Returns:
+            List (json): Example: 
+            [
+                {
+                    "id": "test",
+                    "name": "test",
+                    "description": "test",
+                    "url": "https://misskey-hub.net/avatar-decoration-template.png",
+                    "roleIdsThatCanBeUsedThisDecoration": []
+                },
+                {
+                    "id": "test2",
+                    "name": "test2",
+                    "description": "test2",
+                    "url": "https://misskey-hub.net/avatar-decoration-template.png",
+                    "roleIdsThatCanBeUsedThisDecoration": []
+                },
+                ...
+            ]
+        """
+        return request_sync(self.address, self.i, "get-avatar-decorations", {})
     
 class blocking:
     
