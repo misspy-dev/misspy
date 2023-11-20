@@ -19,46 +19,48 @@ class MiAuth:
         self,
         name,
         icon=None,
-        callback=None,
-        permission: list = [
-            "read:account",
-            "write:account",
-            "read:blocks",
-            "write:blocks",
-            "read:drive",
-            "write:drive",
-            "read:favorites",
-            "write:favorites",
-            "read:following",
-            "write:following",
-            "read:messaging",
-            "write:messaging",
-            "read:mutes",
-            "write:mutes",
-            "write:notes",
-            "read:notifications",
-            "write:notifications",
-            "write:reactions",
-            "write:votes",
-            "read:pages",
-            "write:pages",
-            "write:page-likes",
-            "read:page-likes",
-            "write:gallery-likes",
-            "read:gallery-likes",
-        ],
+        callback: str=None,
+        permission: list | None = None,
     ):
         """generate MiAuth URL.
 
         Args:
             name (str): Application name.
             icon (str, optional): Application icon url. Defaults to None.
-            callback (_type_, optional): Application callback url. Defaults to None.
-            permission (_type_, optional): Application Permission.
+            callback (str, optional): Application callback url. Defaults to None.
+            permission (list | None, optional): Application Permission.
 
         Returns:
             str: MiAuth url.
         """
+        if permission is None:
+            permission = [
+                "read:account",
+                "write:account",
+                "read:blocks",
+                "write:blocks",
+                "read:drive",
+                "write:drive",
+                "read:favorites",
+                "write:favorites",
+                "read:following",
+                "write:following",
+                "read:messaging",
+                "write:messaging",
+                "read:mutes",
+                "write:mutes",
+                "write:notes",
+                "read:notifications",
+                "write:notifications",
+                "write:reactions",
+                "write:votes",
+                "read:pages",
+                "write:pages",
+                "write:page-likes",
+                "read:page-likes",
+                "write:gallery-likes",
+                "read:gallery-likes",
+            ]
         self.session_id = uuid.uuid4()
         if callback is not None:
             callback = f"&callback={callback}"
