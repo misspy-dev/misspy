@@ -1,6 +1,7 @@
 from typing import Any
 from .core.http import request
 
+
 class reactions:
     def __init__(self, address, i, ssl=True) -> None:
         self.ssl = False
