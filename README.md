@@ -73,7 +73,7 @@ https://docs.misspy.xyz/
 ## supported python version
 |                          | below 3.7 | 3.8 ~ 3.11          | 3.12             | 
 | ------------------------ | --------- | ------------------- | ---------------- | 
-| supported                | ❌        | ⭕                  | ⭕ (Beta)        | 
+| supported                | ❌        | ⭕                  | ⭕        | 
 | supported misspy version | ❌        | 2023.8.24rc1~latest | latest | 
 
 ## supported misskey versions
