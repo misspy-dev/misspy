@@ -1,12 +1,17 @@
-import json
 import requests
 
 import aiohttp
 import httpx
 
-from .exception import HTTPException, ClientException, RateLimitError
+try:
+    import orjson as json
+except ModuleNotFoundError:
+    import json
+
+from misspy.core.exception import HTTPException, ClientException, RateLimitError
 
 h_t = {"Content-Type": "application/json"}
+
 
 def request_sync(
     address,
@@ -14,7 +19,7 @@ def request_sync(
     endpoint="test",
     jobj: dict = {"required": True},
     header: dict = h_t,
-    ssl: bool=True
+    ssl: bool = True,
 ):
     """request_sync (internal function)
 
@@ -31,10 +36,12 @@ def request_sync(
     url = address + "/api/" + endpoint
     if i is not None:
         jobj["i"] = i
-    res = requests.post(url, data=json.dumps(jobj, ensure_ascii=False), headers=header, verify=ssl)
+    res = requests.post(
+        url, data=json.dumps(jobj, ensure_ascii=False), headers=header, verify=ssl
+    )
     try:
         return res.json()
-    except:
+    except Exception as e:
         return True
 
 
@@ -93,11 +100,11 @@ async def request(
                 resp = json.loads(await res.text)
         if resp.get("error").get("kind") is not None:
             if resp["error"]["code"] == "RATE_LIMIT_EXCEEDED":
-                raise RateLimitError("We are being rate limited. Please try again in a few moments.")
+                raise RateLimitError(
+                    "We are being rate limited. Please try again in a few moments."
+                )
             raise ClientException(
-                resp["error"]["message"]
-                + "\nid: "
-                + resp["error"]["id"]
+                resp["error"]["message"] + "\nid: " + resp["error"]["id"]
             )
         else:
             print(type(resp))

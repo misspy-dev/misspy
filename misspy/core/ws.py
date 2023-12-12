@@ -1,10 +1,18 @@
-import asyncio
-import json
+import traceback
+from functools import partial
 
 from attrdictionary import AttrDict
-import aiohttp
+import websockets
+try:
+    import orjson as json
+except ModuleNotFoundError:
+    import json
 
-from misspy.hook import hook
+from ..hook import hook
+from ..reaction import reactions
+from ..notes import notes
+from ..user import following
+
 from . import exception
 
 
@@ -14,51 +22,73 @@ class MiWS:
         self.address = address
         self.ssl = ssl
 
+        self.reactions = reactions(self.address, self.i, self.ssl)
+        self.notes = notes(self.address, self.i, self.ssl)
+        self.following = following(self.address, self.i, self.ssl)
+
     async def ws_handler(self):
         try:
             procotol = "ws://"
             if self.ssl:
                 procotol = "wss://"
-            session = aiohttp.ClientSession()
-            async with session.ws_connect(
-                f"{procotol}{self.address}/streaming?i={self.i}"
-            ) as self.connection:
-                try:
-                    await hook.functions["ready"]()
-                except KeyError:
-                    pass
-                while True:
+                async for self.connection in websockets.connect(
+                    f"{procotol}{self.address}/streaming?i={self.i}"
+                ):
                     try:
-                        recv = await self.connection.receive_json()
-                    except AttributeError:
-                        pass
-                    try:
-                        if recv["type"] == "channel":
-                            if recv["body"]["type"] == "note":
-                                await hook.functions[recv["body"]["type"]](
-                                    AttrDict(recv["body"]["body"])
-                                )
-                            elif recv["body"]["type"] == "notification":
-                                await hook.functions[recv["body"]["body"]["type"]](
-                                    AttrDict(recv["body"]["body"])
-                                )
-                            elif recv["body"]["type"] == "follow":
-                                await hook.functions[recv["body"]["type"]](
-                                    AttrDict(recv["body"]["body"])
-                                )
-                            elif recv["body"]["type"] == "followed":
-                                await hook.functions[recv["body"]["type"]](
-                                    AttrDict(recv["body"]["body"])
-                                )
-                            elif recv["type"] == "noteUpdated":
-                                await hook.functions[recv["body"]["type"]](
-                                    AttrDict(recv["body"])
-                                )
-                            else:
-                                await hook.functions[recv["body"]["type"]](
-                                    AttrDict(recv["body"])
-                                )
-                    except KeyError:
-                        pass
+                        try:
+                            await hook.functions["ready"]()
+                        except KeyError:
+                            pass
+                        while True:
+                            try:
+                                recv = json.loads(await self.connection.recv())
+                            except AttributeError:
+                                pass
+                            try:
+                                if recv["type"] == "channel":
+                                    if recv["body"]["type"] == "note":
+                                        ctx = {}
+                                        ctx["id"] = recv["body"]["body"]["id"]
+                                        ctx["reply"] = partial(
+                                            self.notes.create, replyid=ctx["id"]
+                                        )
+                                        ctx["renote"] = partial(
+                                            self.notes.create, replyid=ctx["id"]
+                                        )
+                                        ctx["add_reaction"] = partial(
+                                            self.reactions.create, noteId=ctx["id"]
+                                        )
+                                        ctx[
+                                            "remove_reaction"
+                                        ] = await self.reactions.delete(ctx["id"])
+                                        await hook.functions[
+                                            recv["body"]["body"]["type"]
+                                        ](AttrDict(ctx), recv["body"]["body"])
+                                    elif recv["body"]["type"] == "notification":
+                                        await hook.functions[
+                                            recv["body"]["body"]["type"]
+                                        ](recv["body"]["body"])
+                                    elif recv["body"]["type"] == "follow":
+                                        await hook.functions[recv["body"]["type"]](
+                                            recv["body"]["body"]
+                                        )
+                                    elif recv["body"]["type"] == "followed":
+                                        await hook.functions[recv["body"]["type"]](
+                                            recv["body"]["body"]
+                                        )
+                                    elif recv["type"] == "noteUpdated":
+                                        await hook.functions[recv["body"]["type"]](
+                                            recv["body"]
+                                        )
+                                    else:
+                                        await hook.functions[recv["body"]["type"]](
+                                            recv["body"]
+                                        )
+                            except KeyError:
+                                pass
+                    except (websockets.ConnectionClosedError, Exception):
+                        continue
         except Exception as e:
-            raise exception.WebsocketError(e)
+            # warnings.warn(e, exception.WebsocketError)
+            print(traceback.format_exc())
+            pass

@@ -1,34 +1,32 @@
-from __future__ import annotations
 import asyncio
 
 try:
     import orjson as json
 except ModuleNotFoundError:
     import json
-from attrdictionary import AttrDict
 
-from .channels import channels
-from .clips import clips
-from .drive import drive
-from .federation import federation
+from .ws import MiWS
+from .hook import cmdHook
 
-from .pages import pages
-from .core.http import request
-from .MiWeb import MiWeb
-from .hashtags import hashtags
-from .reaction import reactions
-from .notes import notes
-from .server import server
-from .user import i, users, following
-from .core.ws import MiWS
+from ...channels import channels
+from ...clips import clips
+from ...drive import drive
+from ...federation import federation
+
+from ...pages import pages
+from ...MiWeb import MiWeb
+from ...hashtags import hashtags
+from ...reaction import reactions
+from ...notes import notes
+from ...server import server
+from ...user import i, users, following
+
 
 class Bot:
-    """
-    Class used to connect and interact with the Misskey Streaming API.
-    """
 
-    def __init__(self, address, token=None, ssl=True) -> None:
-        self.nyaize = False #Unstable
+    def __init__(self, address, __i=None, ssl=True) -> None:
+        self.address = address
+        self.__i = __i
         self.ssl = ssl
 
         http = "http://"
@@ -41,8 +39,11 @@ class Bot:
         else:
             self.address = address
             self.address_raw = address.replace(https, "").replace(http, "")
-        self.__i = token
-        self.ws = MiWS(self.address_raw, self.__i, self.ssl)
+
+        self.add_hook = cmdHook.add_hook
+        self.remove_hook = cmdHook.remove_hook
+        self.reload_hook = cmdHook.reload_hook
+
         self.reactions = reactions(self.address, self.__i, self.ssl)
         self.notes = notes(self.address, self.__i, self.ssl)
         self.server = server(self.address, self.__i, self.ssl)
@@ -58,12 +59,23 @@ class Bot:
         self.i = i(self.address, self.__i, self.ssl)
         self.mi = self.server.user()
 
-    def run(self):
-        asyncio.run(self.ws.ws_handler(notes_nyaize=self.nyaize))
+        self.set_ui()
+        self.index_cmd = "cmd_" + self.username
 
+        self.ws = MiWS(self.address_raw, self.__i, self.ssl, ui={"id": self.id, "name": self.name, "username": self.username})
+        
+
+    def set_ui(self):
+        self.id = self.mi.id  # ment__ions
+        self.name = self.mi.name
+        self.username = self.mi.username
+        return {"id": self.id, "name": self.name, "username": self.username}
+
+    def start(self):
+        asyncio.run(self.ws.ws_handler())
 
     async def connect(self, channel):
-        await self.ws.connection.send_str(
+        await self.ws.connection.send(
             json.dumps(
                 {
                     "type": "connect",
@@ -75,26 +87,22 @@ class Bot:
             )
         )
 
-    async def unsubNote(self, noteId):
-        await self.ws.connection.send_str(
+    async def unsubNote(self, note_id):
+        await self.ws.connection.send(
             json.dumps(
                 {
                     "type": "unsubNote",
-                    "body": {"id": noteId},
+                    "body": {"__id": note_id},
                 }
             )
         )
 
-    async def subNote(self, noteId):
-        await self.ws.connection.send_str(
+    async def subNote(self, note_id):
+        await self.ws.connection.send(
             json.dumps(
                 {
                     "type": "subNote",
-                    "body": {"id": noteId},
+                    "body": {"id": note_id},
                 }
             )
         )
-
-
-    async def pinned_users(self):
-        return AttrDict(request(self.address, self.__i, "pinned-users", {}))

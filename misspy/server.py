@@ -20,7 +20,8 @@ class server:
         self.i = i
 
     def user(self):
-        return AttrDict(request_sync(self.address, self.i, "i", {}, ssl=self.ssl))
+        resp = request_sync(self.address, self.i, "i", {}, ssl=self.ssl)
+        return AttrDict(resp)
 
     def meta(self, detail: bool = True):
         return AttrDict(request_sync(self.address, self.i, "meta", {"detail": detail}))
