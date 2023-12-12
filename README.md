@@ -73,8 +73,8 @@ https://docs.misspy.xyz/
 ## supported python version
 |                          | below 3.7 | 3.8 ~ 3.11          | 3.12             | 
 | ------------------------ | --------- | ------------------- | ---------------- | 
-| supported                | ❌        | ⭕                  | ❌ (Beta)        | 
-| supported misspy version | ❌        | 2023.8.24rc1~latest | 2023.11.0-beta.1 | 
+| supported                | ❌        | ⭕                  | ⭕ (Beta)        | 
+| supported misspy version | ❌        | 2023.8.24rc1~latest | latest | 
 
 ## supported misskey versions
 This library is developed based on the API specification for Misskey v13 or later, so v12 and earlier are not supported (but you may still be able to use this library).
