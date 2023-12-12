@@ -21,6 +21,7 @@ from .notes import notes
 from .server import server
 from .user import i, users, following
 from .core.ws import MiWS
+from .hook import hook
 
 class Bot:
     """
@@ -57,10 +58,19 @@ class Bot:
         self.clips = clips(self.address, self.__i, self.ssl)
         self.i = i(self.address, self.__i, self.ssl)
         self.mi = self.server.user()
+        self.add_hook = hook.add
+        self.remove_hook = hook.remove
+        self.reload_hook = hook.reload
+
+        self.set_ui()
 
     def run(self):
         asyncio.run(self.ws.ws_handler(notes_nyaize=self.nyaize))
 
+    def set_ui(self):
+        self.id = self.mi.id  # ment__ions
+        self.name = self.mi.name
+        self.username = self.mi.username
 
     async def connect(self, channel):
         await self.ws.connection.send_str(

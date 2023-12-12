@@ -24,23 +24,27 @@ mi = misspy.Bot(address, i=token)
 ## Output notes text to the console
 ```python
 import misspy
-from misspy.ext import MiAuth
-from misspy.hook import hook
 
-bot = misspy.Bot("misskey.io", i=token)
+bot = commands.Bot("misskey.example", "token")
 
 async def on_ready():
-    bot.connect("localTimeline")
-    print("running")
+    print("loggedin: ")
+    print("id: "+ bot.id)
+    print("name: "+ bot.name)
+    print("username: "+ bot.username)
+    await bot.connect(misspy.localTimeline) # supported args: misspy.homeTimeline, misspy.localTimeline, misspy.socialTimeline or misspy.hybridTimeline, misspy.globalTimeline and Conventional Method
 
-async def on_note(message):
+
+async def on_note(ctx, message):
+    if message["text"] == "test":
+        await ctx.add_reaction(":test:")
     print("------------")
-    print(message.text)
+    print(message)
     print("------------")
 
+bot.add_hook("ready", on_ready)
+bot.add_hook("note", on_note)
 
-hook.add("note", on_note)
-hook.add("ready", on_ready)
 bot.run()
 ```
 
