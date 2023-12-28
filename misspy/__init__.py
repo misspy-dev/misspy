@@ -9,6 +9,8 @@ from .core import ws
 from .core import http
 from .hook import hook
 
+from . import permissions
+
 __version__ = importlib.metadata.version('misspy') 
 
 homeTimeline = "homeTimeline"

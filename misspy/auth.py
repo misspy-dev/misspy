@@ -18,7 +18,7 @@ class app:
         self,
         name: str,
         description: str,
-        permission: list | None = None,
+        permission: list = [],
         callbackUrl: str = None,
     ):
         """create auth app.
@@ -32,34 +32,6 @@ class app:
         Returns:
             AttrDict: _description_
         """
-        if permission is None:
-            permission = [
-                "read:account",
-                "write:account",
-                "read:blocks",
-                "write:blocks",
-                "read:drive",
-                "write:drive",
-                "read:favorites",
-                "write:favorites",
-                "read:following",
-                "write:following",
-                "read:messaging",
-                "write:messaging",
-                "read:mutes",
-                "write:mutes",
-                "write:notes",
-                "read:notifications",
-                "write:notifications",
-                "write:reactions",
-                "write:votes",
-                "read:pages",
-                "write:pages",
-                "write:page-likes",
-                "read:page-likes",
-                "write:gallery-likes",
-                "read:gallery-likes",
-            ]
         res = await request(
             self._address, None, endpoint="app/create",
             jobj={

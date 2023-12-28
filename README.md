@@ -50,7 +50,7 @@ bot.run()
 
 ## MiAuth
 ```python
-from misspy.ext import MiAuth
+from misspy import MiAuth
 
 mia = MiAuth("misskey.io")
 print(mia.generate_url("example app"))

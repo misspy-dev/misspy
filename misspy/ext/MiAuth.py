@@ -1,7 +1,8 @@
+import uuid
+import urllib.parse
+
 import httpx
 from attrdictionary import AttrDict
-
-import uuid
 
 from ..core import exception
 
@@ -20,7 +21,7 @@ class MiAuth:
         name,
         icon=None,
         callback: str=None,
-        permission: list | None = None,
+        permission: list = [],
     ):
         """generate MiAuth URL.
 
@@ -33,34 +34,6 @@ class MiAuth:
         Returns:
             str: MiAuth url.
         """
-        if permission is None:
-            permission = [
-                "read:account",
-                "write:account",
-                "read:blocks",
-                "write:blocks",
-                "read:drive",
-                "write:drive",
-                "read:favorites",
-                "write:favorites",
-                "read:following",
-                "write:following",
-                "read:messaging",
-                "write:messaging",
-                "read:mutes",
-                "write:mutes",
-                "write:notes",
-                "read:notifications",
-                "write:notifications",
-                "write:reactions",
-                "write:votes",
-                "read:pages",
-                "write:pages",
-                "write:page-likes",
-                "read:page-likes",
-                "write:gallery-likes",
-                "read:gallery-likes",
-            ]
         self.session_id = uuid.uuid4()
         if callback is not None:
             callback = f"&callback={callback}"
@@ -71,7 +44,7 @@ class MiAuth:
         else:
             icon = ""
 
-        url = f"{self._address}/miauth/{self.session_id}?name={name}{callback}{icon}&permission={','.join(permission)}"
+        url = f"{self._address}/miauth/{self.session_id}?name={urllib.parse.quote(name)}{urllib.parse.quote(callback)}{icon}&permission={','.join(permission)}"
         return url
 
     def check(self):

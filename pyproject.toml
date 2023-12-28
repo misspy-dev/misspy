@@ -40,7 +40,7 @@ charset-normalizer = { version = "^3.3.1", optional = true }
 poethepoet = { version = ">=0.22.1,<0.25.0", optional = true }
 requests = "^2.31.0"
 httpx = "^0.25.0"
-aiohttp = "^3.8.6"
+aiohttp = "^3.9.0"
 aiodns = "^3.1.1"
 mkdocs = { version = "*", optional = true }
 mkdocs-material = { version = "*", optional = true }
