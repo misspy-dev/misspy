@@ -54,7 +54,7 @@ source = "git-tag"
 
 [tool.poetry.extras]
 mkdocs = ["mkdocs", "mkdocs-material", "mkdocs-awesome-pages-plugin", "mkdocstrings", "mkdocstrings-python", "mkdocs-git-revision-date-localized-plugin"]
-speedups = ["charset-normalizer", "orjson"]
+speed = ["charset-normalizer", "orjson"]
 dev = ["poethepoet", "black"]
 
 [build-system]
