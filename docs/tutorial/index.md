@@ -18,11 +18,11 @@ py -3 -m pip install -U misspy
 Additional components can be installed to speed up the process.
 Other:
 ```
-python3 -m pip install -U misspy[speedups]
+python3 -m pip install -U misspy[speed]
 ```
 Windows:
 ```
-py -3 -m pip install -U misspy[speedups]
+py -3 -m pip install -U misspy[speed]
 ```
 ### Basic concepts 
 misspy is a mechanism for sending API requests using methods.
