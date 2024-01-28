@@ -9,7 +9,7 @@ Misskey API library for Python with StreamingAPI support.
 Misskey forks not listed below are supported only in the latest version **__provided they are API compatible__**.
 * [misskey](https://github.com/misskey-dev/misskey)
 * [misskey (misskey.io)](https://github.com/misskeyIO/misskey)
-* [firefish (calckey)](https://codeberg.org/firefish/firefish) (Some APIs may not be compatible with some APIs due to missing documentation regarding firefish API specifications.)
+* ~~[firefish (calckey)](https://codeberg.org/firefish/firefish) (Some APIs may not be compatible with some APIs due to missing documentation regarding firefish API specifications.)~~
 
 # example
 **Other examples can be found in the examples directory.**
