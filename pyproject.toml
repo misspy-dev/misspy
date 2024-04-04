@@ -48,6 +48,11 @@ mkdocs-awesome-pages-plugin = { version = "*", optional = true }
 mkdocstrings = { version = "*", optional = true }
 mkdocstrings-python = { version = "*", optional = true }
 mkdocs-git-revision-date-localized-plugin = { version = "*", optional= true}
+orjson = [
+    { version = "3.9.15", optional = true, platform = 'windows'},
+    { version = "^3.9.15", optional = true, platform = 'linux'},
+    { version = "^3.9.15", optional = true, platform = 'darwin'}
+]
 
 [tool.poetry-version-plugin]
 source = "git-tag"
