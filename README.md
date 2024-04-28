@@ -3,6 +3,9 @@
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg?style=flat-square)](https://github.com/psf/black) 
 [![Misskey-API](https://img.shields.io/badge/Misskey-555555.svg?logo=Misskey&style=flat-square)](https://misskey-hub.net)
 
+> [!IMPORTANT]
+> A major rewrite is currently underway [here](https://github.com/misspy-dev/misspy-rewrite). The current version will undergo only minimal maintenance and bug fixes.
+
 Misskey API library for Python with StreamingAPI support.
 
 # supported software
