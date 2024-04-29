@@ -29,7 +29,6 @@ class Bot:
     """
 
     def __init__(self, address, token=None, ssl=True) -> None:
-        self.nyaize = False #Unstable
         self.ssl = ssl
 
         http = "http://"
@@ -65,7 +64,7 @@ class Bot:
         self.set_ui()
 
     def run(self):
-        asyncio.run(self.ws.ws_handler(notes_nyaize=self.nyaize))
+        asyncio.run(self.ws.ws_handler())
 
     def set_ui(self):
         self.id = self.mi.id  # ment__ions
